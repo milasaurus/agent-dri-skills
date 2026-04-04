@@ -8,7 +8,7 @@ Review the provided system design and produce a staff-level architectural assess
 
 1. Read CLAUDE.md and understand the project context and constraints
 2. Identify the design scope — the specific system, service, or data flow being reviewed
-3. Clarify the top 1-2 quality goals: correctness, reliability, latency, scale, cost, or operability
+3. Clarify the top 1-2 product goals: correctness, reliability, latency, scale, or operability
 4. Evaluate decomposition:
    - Are concerns separated cleanly or tangled together?
    - Can components be independently tested and deployed?

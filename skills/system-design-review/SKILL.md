@@ -159,7 +159,7 @@ Use this skill when:
 
 - "We only need today's traffic profile."
   - Rebuttal: staff review requires testing against growth.
-    A design that fails at 10x is unsafe even if it works today.
+    A design that fails at 2x is unsafe even if it works today.
 
 - "This is just a data pipeline, not a system design problem."
   - Rebuttal: data-intensive systems are systems. They still

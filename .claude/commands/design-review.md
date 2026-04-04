@@ -8,25 +8,38 @@ Review the provided system design and produce a staff-level architectural assess
 
 1. Read CLAUDE.md and understand the project context and constraints
 2. Identify the design scope — the specific system, service, or data flow being reviewed
-3. Clarify the top 1-2 system goals: correctness, reliability, latency, scale, or operability
-4. Clarify the top 1-2 product goals: what business or user-facing outcomes matter most?
-5. Evaluate decomposition:
+3. Confirm the business goal and user-facing impact
+   - What behavior changes for the end user?
+   - What is the business value — cost reduction, revenue,
+     reliability, velocity, or new capability?
+   - If the business value isn't stated, ask for it before
+     proceeding. A design without a clear goal cannot be
+     evaluated against the right quality bar.
+4. Evaluate decomposition and leverage points
    - Are concerns separated cleanly or tangled together?
-   - Can components be independently tested and deployed?
-   - Is business logic separated from execution and infrastructure?
-6. Assess fundamentals against the design:
-   - Reliability: where does the system fail open vs. fail hard? What happens to in-flight requests during a downstream outage — are they dropped, retried, or queued? Is there a dead letter queue or retry mechanism with backoff?
-   - Scalability: what are the actual load numbers — RPS today, projected peak, spike multiplier? Are the read and write paths independently scalable or coupled? Where are the hot spots — specific keys, shards, or nodes that will concentrate load?
-   - Maintainability: can an oncall engineer understand what the system is doing at 2am without reading source code? Are components loosely coupled enough that one team can change their piece without coordinating a multi-team deploy?
-   - Availability: can the system handle a full DC or region failure? What degrades gracefully vs. fails completely? Is replication synchronous or async — and what are the consistency tradeoffs of that choice?
-   - Latency: what is the p99 latency target and is it validated against the design? Are there synchronous calls on the hot path that should be async? Where does caching help and what is the invalidation strategy?
-   - Operability: are SLOs defined with specific numbers — availability %, p99 latency ms? Can a bad feature path be disabled without a deploy — decider, feature flag, or config? Is there a runbook for the most likely failure scenarios?
-7. Check infrastructure alignment:
-   - Is this building on shared infrastructure or creating a parallel system?
-   - What are the long-term maintenance implications?
-8. Surface tradeoffs and produce actionable feedback:
-   - State the biggest risks and key assumptions
-   - Recommend concrete changes where fundamentals are violated
-   - If the design is sound, state the conditions under which it can be approved
+   - Identify the interfaces, stateful systems, and data model
+     — scrutinize these hardest. They are the highest-leverage
+     points and the most expensive to fix later.
+   - Can components evolve independently without a global change?
+5. Assess fundamentals against the design
+   - Data model: primary key structure, consistency guarantees
+     across multiple stores, TTL and retention strategy.
+   - Reliability: fail open vs. fail hard, retry behavior,
+     hot key concentration, read/write path coupling.
+   - Scalability: actual RPS numbers, 10x load behavior,
+     N+1 read patterns, caching and invalidation strategy.
+   - Rollout: staged plan, feature flags, success metric,
+     rollback trigger.
+   - Observability: SLOs with specific numbers, lifecycle
+     trace, alerts for likely failure scenarios.
+   - Migration: backfill or dual-read strategy, rollback
+     safety, downstream consumers of old format.
+6. Produce a clear disposition
+   - Approve, approve with conditions, or list specific
+     changes required.
+   - Make feedback actionable and scoped — directional,
+     not prescriptive.
+   - Do not block on perfection. If the design is sound,
+     say so and note what to revisit post-launch.
 
-If the design has critical gaps in operability or failure handling, flag these before proceeding to recommendations. Use `system-design-review` to validate the final assessment.
+If the business value or user-facing impact is missing, flag this before any other feedback. Use `system-design-review` to validate the final assessment.

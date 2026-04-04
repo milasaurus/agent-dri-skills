@@ -1,0 +1,12 @@
+{
+  "name": "agent-dri-skills",
+  "description": "Production-grade skills for engineers and engineering leaders — IC workflows and staff-level review patterns for system design, code review, technical direction, and incident review.",
+  "version": "1.0.0",
+  "author": {
+    "name": "Mila Wilson"
+  },
+  "homepage": "https://github.com/milasaurus/agent-dri-skills",
+  "repository": "https://github.com/milasaurus/agent-dri-skills",
+  "license": "MIT",
+  "commands": "./.claude/commands"
+}

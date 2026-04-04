@@ -1,5 +1,5 @@
 ---
-description: Review a system design from a staff-level architectural lens anchored in DDIA fundamentals.
+description: Review a system design from a staff-level architectural lens.
 ---
 
 Invoke the agent-dri-skills:system-design-review skill.

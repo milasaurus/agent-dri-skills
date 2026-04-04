@@ -14,13 +14,13 @@ Review the provided system design and produce a staff-level architectural assess
    - Are concerns separated cleanly or tangled together?
    - Can components be independently tested and deployed?
    - Is business logic separated from execution and infrastructure?
-6. Assess DDIA fundamentals:
-   - Reliability: what failure modes exist and how does the system respond?
-   - Scalability: what happens at 10x load? Where are the bottlenecks?
-   - Maintainability: can the next engineer understand and modify this safely?
-   - Availability: how does the design handle partial failures?
-   - Latency: where are the hot paths? Is caching or precomputation appropriate?
-   - Operability: can this be debugged and recovered without reading source code?
+6. Assess fundamentals against the design:
+   - Reliability: where does the system fail open vs. fail hard? What happens to in-flight requests during a downstream outage — are they dropped, retried, or queued? Is there a dead letter queue or retry mechanism with backoff?
+   - Scalability: what are the actual load numbers — RPS today, projected peak, spike multiplier? Are the read and write paths independently scalable or coupled? Where are the hot spots — specific keys, shards, or nodes that will concentrate load?
+   - Maintainability: can an oncall engineer understand what the system is doing at 2am without reading source code? Are components loosely coupled enough that one team can change their piece without coordinating a multi-team deploy?
+   - Availability: can the system handle a full DC or region failure? What degrades gracefully vs. fails completely? Is replication synchronous or async — and what are the consistency tradeoffs of that choice?
+   - Latency: what is the p99 latency target and is it validated against the design? Are there synchronous calls on the hot path that should be async? Where does caching help and what is the invalidation strategy?
+   - Operability: are SLOs defined with specific numbers — availability %, p99 latency ms? Can a bad feature path be disabled without a deploy — decider, feature flag, or config? Is there a runbook for the most likely failure scenarios?
 7. Check infrastructure alignment:
    - Is this building on shared infrastructure or creating a parallel system?
    - What are the long-term maintenance implications?

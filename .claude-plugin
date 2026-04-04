@@ -1,0 +1,19 @@
+{
+  "name": "agent-dri-skills",
+  "owner": {
+    "name": "Mila Wilson"
+  },
+  "metadata": {
+    "description": "Staff+ Engineering skills for AI agents. Includes  staff-level patterns for system design review, technical strategy, experimentation, data driven decision making, and code review"
+  },
+  "plugins": [
+    {
+      "name": "agent-dri-skills",
+      "source": {
+        "source": "github",
+        "repo": "milasaurus/agent-dri-skills"
+      },
+      "description": "Staff+ Engineering skills for AI agents. Includes  staff-level patterns for system design review, technical strategy, experimentation, data driven decision making, and code review."
+    }
+  ]
+}

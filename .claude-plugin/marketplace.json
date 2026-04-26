@@ -4,7 +4,7 @@
     "name": "Mila Wilson"
   },
   "metadata": {
-    "description": "Staff+ Engineering skills for AI agents. Includes  staff-level patterns for system design review, technical strategy, experimentation, data driven decision making, and code review"
+    "description": "Staff+ Engineering skills for AI agents. Includes staff-level patterns for system design review, code review with a simplification lens, and curated external skills like Langfuse for LLM observability."
   },
   "plugins": [
     {
@@ -13,7 +13,16 @@
         "source": "github",
         "repo": "milasaurus/agent-dri-skills"
       },
-      "description": "Staff+ Engineering skills for AI agents. Includes  staff-level patterns for system design review, technical strategy, experimentation, data driven decision making, and code review."
+      "description": "Staff+ Engineering skills for AI agents — system design review and code review with a simplification lens."
+    },
+    {
+      "name": "langfuse",
+      "source": {
+        "source": "git-subdir",
+        "url": "https://github.com/langfuse/skills.git",
+        "path": "skills/langfuse"
+      },
+      "description": "Interact with Langfuse for LLM observability — query traces, manage prompts and datasets, audit instrumentation, and look up Langfuse documentation."
     }
   ]
 }

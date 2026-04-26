@@ -35,18 +35,29 @@ A staff-level code review with a simplification lens. Encodes the judgment about
 
 A code review that ends in observations without dispositions has not completed its job. Invoke with `/code-review`.
 
+### langfuse (curated)
+
+The [Langfuse](https://langfuse.com) skill, maintained by the Langfuse team at [github.com/langfuse/skills](https://github.com/langfuse/skills), is included in this marketplace as a curated recommendation. It teaches an agent how to instrument LLM applications, query traces, manage prompts and datasets, and look up Langfuse documentation.
+
+It's referenced via `git-subdir` so updates from the upstream repo land automatically when you `/plugin update` — no fork or vendored copy here.
+
 ## Installation
 
 ### From the plugin marketplace (recommended)
 
-Add this repo as a marketplace, then install:
+Add this repo as a marketplace, then install whichever plugins you want:
 
 ```bash
 /plugin marketplace add github:milasaurus/agent-dri-skills
+
+# Mila's staff-engineering skills (system-design-review, code-review)
 /plugin install agent-dri-skills
+
+# Curated external skill — Langfuse for LLM observability
+/plugin install langfuse
 ```
 
-Once installed, `/design-review` and `/code-review` are available in any project. Run `/help` to confirm they appear.
+Once installed, the slash commands (`/design-review`, `/code-review`, etc.) are available in any project. Run `/help` to confirm they appear.
 
 ### Local development
 

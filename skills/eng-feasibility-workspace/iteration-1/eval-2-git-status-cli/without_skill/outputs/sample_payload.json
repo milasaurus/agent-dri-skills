@@ -1,0 +1,57 @@
+{
+  "_note": "Hand-crafted illustrative payload. Real run via `bash smoke_test.sh` will overwrite this with the live shape from `git log` against the target repo. Stats are realistic but not measured.",
+  "author": "mila@example.com",
+  "window_days": 7,
+  "generated_at": "2026-05-07T00:00:00+00:00",
+  "commit_count": 4,
+  "commits": [
+    {
+      "sha": "dbb53d2aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "author_name": "Mila",
+      "author_email": "mila@example.com",
+      "authored_at": "2026-05-06T18:12:00+00:00",
+      "subject": "Merge pull request #5 from milasaurus/agent-langfuse",
+      "body": "",
+      "branches": ["main", "origin/main"],
+      "files_changed": 3,
+      "insertions": 142,
+      "deletions": 0
+    },
+    {
+      "sha": "e66823e0000000000000000000000000000000000",
+      "author_name": "Mila",
+      "author_email": "mila@example.com",
+      "authored_at": "2026-05-06T17:55:00+00:00",
+      "subject": "docs: trim langfuse readme to a secondary-skills table",
+      "body": "Pulled the long-form copy out of the README and replaced it with a one-row entry in the secondary-skills table so the marketplace stays scannable.",
+      "branches": ["agent-langfuse"],
+      "files_changed": 1,
+      "insertions": 12,
+      "deletions": 84
+    },
+    {
+      "sha": "de69f5f1111111111111111111111111111111111",
+      "author_name": "Mila",
+      "author_email": "mila@example.com",
+      "authored_at": "2026-05-05T22:30:00+00:00",
+      "subject": "feat: add Langfuse skill to the marketplace as a curated recommendation",
+      "body": "Adds the Langfuse skill manifest and points at the upstream repo. Curated as a secondary recommendation so it doesn't compete with the in-house skills on the front page.",
+      "branches": ["agent-langfuse"],
+      "files_changed": 4,
+      "insertions": 87,
+      "deletions": 2
+    },
+    {
+      "sha": "ab7ce4f2222222222222222222222222222222222",
+      "author_name": "Mila",
+      "author_email": "mila@example.com",
+      "authored_at": "2026-05-04T15:08:00+00:00",
+      "subject": "feat: add code review skill with staff-level simplification lens",
+      "body": "First pass at a code-review skill that prioritizes hot spots and leverage points over cosmetic cleanup. Produces a per-candidate disposition (simplify / encode / defer / leave).",
+      "branches": ["agent-simplify", "main"],
+      "files_changed": 6,
+      "insertions": 312,
+      "deletions": 11
+    }
+  ]
+}

@@ -1,0 +1,164 @@
+{
+  "expectations": [
+    {
+      "text": "The output explicitly answers the user's question: 'should we spike, or just build?' — either with a justified 'no spike needed' note in decision.md, or by producing a full spike.",
+      "passed": true,
+      "evidence": "SPIKE_PLAN.md opens with 'Decision being de-risked' stating 'Before committing engineers to that build, we want a 1-2 day spike that tells us whether this is even worth pursuing.' README.md describes it as 'A 1-2 day feasibility spike.' A full spike was produced with run_spike.py, baseline.py, llm_recommender.py, etc., plus explicit kill criteria and decision criteria sections in SPIKE_PLAN.md. The spike-vs-build question is answered: 'spike, here it is.'"
+    },
+    {
+      "text": "An assumptions list file is present in outputs.",
+      "passed": true,
+      "evidence": "SPIKE_PLAN.md contains a '## Load-bearing assumptions' section with 4 numbered items (Quality, ID validity, Latency & cost, Stability)."
+    },
+    {
+      "text": "Assumptions are categorized as must-hold / should-hold / nice-if-it-holds.",
+      "passed": false,
+      "evidence": "SPIKE_PLAN.md lists assumptions as a flat numbered list (1. Quality, 2. ID validity, 3. Latency & cost, 4. Stability) with no categorization into must-hold / should-hold / nice-if-it-holds tiers. The intro says 'This project breaks if any of these are false. We test them in priority order' — priority is implied but the explicit three-tier categorization required by the assertion is absent."
+    },
+    {
+      "text": "There are between 2 and 4 must-hold assumptions.",
+      "passed": false,
+      "evidence": "No must-hold category exists in SPIKE_PLAN.md. Assumptions are not tiered, so the count of must-hold assumptions is undefined. FAIL by absence of the structure."
+    },
+    {
+      "text": "Each must-hold assumption has a measurable, falsifiable gate.",
+      "passed": false,
+      "evidence": "There is no must-hold tier. The assumptions that exist do have measurable gates (e.g., 'hit-rate@20 and NDCG@20 by a margin we'd actually ship', 'returns 20 unique IDs that all exist in the catalog, >= X% of the time', 'p95 ... under 400 ms', 'Kendall's tau >= 0.7'), but the assertion requires must-hold assumptions specifically, which the structure does not provide. FAIL on the structural requirement."
+    },
+    {
+      "text": "A single-file spike exists whose filename contains 'spike'. No package structure beneath outputs/.",
+      "passed": false,
+      "evidence": "Outputs contain five Python files split across concerns: baseline.py, eval_dataset.py, llm_recommender.py, metrics.py, run_spike.py — plus requirements.txt, SPIKE_PLAN.md, README.md, spike_results.json. Although run_spike.py contains 'spike' in its name, it imports from the other modules ('import baseline', 'import llm_recommender', 'from eval_dataset import ...', 'from metrics import ...'), so the spike is not single-file. FAIL: the spike was deliberately split into multiple cooperating files."
+    },
+    {
+      "text": "The spike imports the real Anthropic SDK and uses real call shapes.",
+      "passed": true,
+      "evidence": "llm_recommender.py line 107 imports 'from anthropic import Anthropic'. Lines 109-116 use the real call shape: 'client = Anthropic(api_key=os.environ[\"ANTHROPIC_API_KEY\"])' and 'client.messages.create(model=model, max_tokens=1024, system=SYSTEM_PROMPT, messages=[{\"role\": \"user\", \"content\": _user_message(example, k)}])'. Response parsing reads 'block.text' for blocks where 'block.type == \"text\"' and reads 'response.usage.input_tokens' / 'output_tokens' / 'response.stop_reason' — these are real SDK shapes. requirements.txt pins 'anthropic>=0.40.0'."
+    },
+    {
+      "text": "The spike file has no Pydantic models, no API server scaffolding, no separate config files.",
+      "passed": true,
+      "evidence": "No Pydantic imports anywhere — only stdlib dataclasses (e.g., '@dataclass class LLMResult', '@dataclass class EvalExample', '@dataclass class RankerStats'). No FastAPI/Flask/uvicorn — run_spike.py is a CLI argparse script, not a server. No separate config files (no .yaml, .toml, .ini, settings.py); cost rates are constants in run_spike.py. requirements.txt is a deps file, not a config file."
+    },
+    {
+      "text": "A `tradeoffs.md` file exists in outputs.",
+      "passed": false,
+      "evidence": "Listing of outputs/ shows: README.md, SPIKE_PLAN.md, baseline.py, eval_dataset.py, llm_recommender.py, metrics.py, requirements.txt, run_spike.py, spike_results.json. No tradeoffs.md."
+    },
+    {
+      "text": "`tradeoffs.md` rows have the assumption / gate / result / learning / pivot structure for each must-hold assumption.",
+      "passed": false,
+      "evidence": "tradeoffs.md does not exist, so it cannot have the required structure. FAIL by absence."
+    },
+    {
+      "text": "An explicit decision is stated: build / pivot architecture / pivot narrative / stop.",
+      "passed": true,
+      "evidence": "run_spike.py lines 187-189 print 'Verdict: GREENLIGHT (all gates pass)' or 'DO NOT BUILD YET - see failed gates above'. spike_results.json contains '\"verdict\": \"no-go\"'. SPIKE_PLAN.md has explicit 'Kill criteria (any one => stop)' and 'Decision criteria (all must be true => greenlight)' sections. The decision framing is build-or-stop, which maps to the build/stop options in the assertion."
+    },
+    {
+      "text": "A must-hold assumption captures the ranking-quality bet (e.g., 'LLM produces a stable, parseable ranked list of 20 item IDs that is at least as good as the existing pipeline on a held-out evaluation'). The gate is measurable (recall@20, NDCG, or similar).",
+      "passed": false,
+      "evidence": "Assumption 1 in SPIKE_PLAN.md ('Quality - On a frozen eval set sampled from real sessions, the LLM's top-20 beats a popularity baseline on hit-rate@20 and NDCG@20 by a margin we'd actually ship') does capture the ranking-quality bet with measurable metrics (hit-rate@20, NDCG@20). HOWEVER, the assertion specifically requires this be a 'must-hold' assumption, and no must-hold tier exists in this output. The substance is present, the structural label is missing. FAIL on strict reading."
+    },
+    {
+      "text": "Latency or per-call cost is captured as either a must-hold or should-hold assumption with a numeric threshold.",
+      "passed": false,
+      "evidence": "Assumption 3 ('Latency & cost - p95 end-to-end latency under our recs SLO (assume 400 ms for the spike target ...) and cost-per-1k-recs inside the budget the product team will accept') covers latency and cost with a numeric threshold of 400 ms p95. Kill criteria add 'p95 latency > 2x our SLO' and 'Per-1k-recs cost > 10x the current pipeline'. HOWEVER, the assertion specifically requires this be tagged as either must-hold or should-hold; no such tiering exists in the output. FAIL on strict reading."
+    }
+  ],
+  "summary": {
+    "passed": 5,
+    "failed": 8,
+    "total": 13,
+    "pass_rate": 0.38
+  },
+  "execution_metrics": {
+    "output_chars": 26877,
+    "output_files": 9,
+    "notes": "No metrics.json from executor. Counted output_chars across all files in outputs/. File set: README.md, SPIKE_PLAN.md, baseline.py, eval_dataset.py, llm_recommender.py, metrics.py, requirements.txt, run_spike.py, spike_results.json (plus a __pycache__ directory from a local execution)."
+  },
+  "timing": {
+    "executor_duration_seconds": 180.013,
+    "total_duration_seconds": 180.013,
+    "total_tokens": 35003
+  },
+  "claims": [
+    {
+      "claim": "The spike is runnable end-to-end without an API key via --dry-run, returning a canned response that includes one hallucinated ID to exercise validation.",
+      "type": "process",
+      "verified": true,
+      "evidence": "llm_recommender.py _dry_run_rank deliberately injects 'item_9999_fake' at index 4 to exercise the id_validity path. spike_results.json shows id_valid_pct 0.0 for the LLM (because every dry-run response carries the hallucinated ID), confirming the dry-run path was exercised end-to-end."
+    },
+    {
+      "claim": "The popularity baseline is a recency-weighted history-frequency ranker, with purchase weighted 3x and add_to_cart weighted 2x.",
+      "type": "factual",
+      "verified": true,
+      "evidence": "baseline.py rank() uses weight = (idx + 1) / n with multipliers weight *= 3.0 for 'purchase' and weight *= 2.0 for 'add_to_cart'."
+    },
+    {
+      "claim": "The Anthropic call uses claude-3-5-haiku-latest as the default model with max_tokens=1024 and a system prompt.",
+      "type": "factual",
+      "verified": true,
+      "evidence": "llm_recommender.py rank() default model='claude-3-5-haiku-latest'; client.messages.create(model=model, max_tokens=1024, system=SYSTEM_PROMPT, ...). This is a real, current SDK call shape."
+    },
+    {
+      "claim": "Kendall's tau is computed over each pair of repeated runs and averaged per example, with default --repeats=2.",
+      "type": "factual",
+      "verified": true,
+      "evidence": "run_spike.py main() computes pair_taus across all i<j pairs of repeat_rankings, then llm_stats.taus.append(statistics.fmean(pair_taus)). Default --repeats is 2 in argparse, with a comment '>=2 for tau'. spike_results.json shows tau_mean 1.0 because the dry_run path is deterministic."
+    },
+    {
+      "claim": "The spike is intentionally kept lean: 'no service, no retries-with-backoff strategy beyond the bare minimum, no observability, no batching.'",
+      "type": "quality",
+      "verified": true,
+      "evidence": "README.md 'What this is NOT' section says exactly this. The code confirms it: no FastAPI, no service plumbing, no Pydantic, no retries, no logging framework."
+    },
+    {
+      "claim": "Cost rates COST_PER_M_INPUT_TOKENS=0.80 and COST_PER_M_OUTPUT_TOKENS=4.00 are placeholders.",
+      "type": "factual",
+      "verified": true,
+      "evidence": "run_spike.py comment '# $/1M input tokens (placeholder)' and '# $/1M output tokens (placeholder)'. These are not the actual claude-3-5-haiku rates and the code flags them as such."
+    },
+    {
+      "claim": "The day-0 deliverable answers the spike-vs-build question by building the spike.",
+      "type": "process",
+      "verified": true,
+      "evidence": "The output is a working day-0 spike with explicit decision and kill criteria. SPIKE_PLAN.md 'Time budget' section describes Day 0 as 'write spike, agree on eval set, agree on baseline.' The deliverable matches that scope."
+    },
+    {
+      "claim": "The spike fits the 'single-file spike' shape the eng-feasibility skill recommends.",
+      "type": "quality",
+      "verified": false,
+      "evidence": "The deliverable is split across baseline.py, llm_recommender.py, metrics.py, eval_dataset.py, run_spike.py — five files coupled by imports. This is closer to a small package than a single-file spike. The README and SPIKE_PLAN explicitly describe 'one file per concern' and the assertion 'single-file-spike-exists' fails accordingly."
+    }
+  ],
+  "user_notes_summary": {
+    "uncertainties": [],
+    "needs_review": [],
+    "workarounds": [],
+    "notes": "No user_notes.md was produced by the executor."
+  },
+  "eval_feedback": {
+    "suggestions": [
+      {
+        "assertion": "answers-spike-vs-build-question",
+        "reason": "This passes too easily — any output that includes the word 'spike' or any decision text in any file would satisfy it. Consider tightening to require the answer in a designated file (decision.md or the top of tradeoffs.md), with a one-line verdict like 'Spike: yes, because ...' or 'No spike: build directly because ...'. Otherwise a baseline that just dumps code and never names the question can pass."
+      },
+      {
+        "assertion": "explicit-decision-stated",
+        "reason": "The four allowed decisions (build / pivot architecture / pivot narrative / stop) are not surfaced in this output by name — instead it uses 'GREENLIGHT' / 'DO NOT BUILD YET' / 'no-go'. I gave it the pass because the substance maps to build-or-stop, but a strict grader could fail it. Consider either tightening the assertion to require those exact labels, or loosening it to 'a decision rubric that maps to one of the four outcomes.' As written it's ambiguous."
+      },
+      {
+        "assertion": "ranking-quality-is-must-hold and latency-or-cost-considered",
+        "reason": "Both assertions hinge on the must-hold/should-hold tiering, which is also tested separately by assumptions-categorized. That means a baseline that has the right *content* but the wrong *structure* fails three assertions for what is essentially one missing label. That's fine if you want strong pressure on the structure, but it also means these two assertions are nearly redundant with assumptions-categorized. Consider either dropping the structural requirement from these two (so they test content presence) or merging them into the categorization assertion."
+      },
+      {
+        "reason": "No assertion checks that the dry-run path is actually runnable end-to-end without credentials. The eval prompt explicitly says 'Don't actually call any real APIs - assume no credentials - but produce the spike files you would have written on day 0.' A skill-aligned output should be runnable in dry-run; a baseline that produces broken-on-import code would still pass every current assertion. Consider an assertion like 'the spike file imports successfully and produces a result without an API key.'"
+      },
+      {
+        "reason": "No assertion checks for catalog/ID-validity handling. ID hallucination is the most likely silent failure mode for an LLM-as-ranker (and this output even calls that out), but the eval doesn't require any assumption to address it. Adding 'an assumption captures ID validity / hallucination risk with a measurable threshold' would catch baselines that hand-wave the constrained-decoding question."
+      }
+    ],
+    "overall": "The eval is doing real discriminating work — the no-skill baseline correctly fails 8/13 assertions, including all the structural ones (categorized tiers, single-file shape, tradeoffs.md). The split between content and structure is sharp, which is exactly what you want when measuring skill uplift. The main gap is that several assertions silently rely on the must-hold/should-hold structure as a precondition; consider whether you want that double-counted or factored into one assertion. Also worth adding a runnability assertion since the prompt explicitly calls out dry-run-without-credentials."
+  }
+}

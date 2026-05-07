@@ -1,0 +1,135 @@
+{
+  "expectations": [
+    {
+      "text": "An assumptions list file is present in outputs (any markdown file whose name or first heading mentions 'assumption').",
+      "passed": false,
+      "evidence": "No file in outputs/ has 'assumption' in its name or first heading. The two markdown files are README.md (first heading: 'Snowflake MCP + LLM SQL Rewriter — Day-0 Spike') and RISKS.md (first heading: 'Risks & open questions before committing to build'). A grep for 'assumption' across the outputs returns no matches at all."
+    },
+    {
+      "text": "Assumptions are categorized as must-hold / should-hold / nice-if-it-holds (or close synonyms like 'must / should / nice').",
+      "passed": false,
+      "evidence": "No assumptions structure exists. RISKS.md uses a flat numbered list of 9 risk topics ('1. Equivalence is the product...', '2. Latency budget', '3. Cost of the safety net', etc.). There is no must/should/nice categorization or any close synonym."
+    },
+    {
+      "text": "There are between 2 and 4 must-hold assumptions (the skill's 'sweet spot').",
+      "passed": false,
+      "evidence": "There are zero must-hold assumptions because the must/should/nice taxonomy is absent. RISKS.md is organized around risk topics, not load-bearing assumptions with explicit gates."
+    },
+    {
+      "text": "Each must-hold assumption has a measurable, falsifiable go/no-go gate (e.g., HTTP code, numeric threshold, pass/fail count). 'It works' alone does not qualify.",
+      "passed": false,
+      "evidence": "No must-hold assumptions exist, so no gates are attached. RISKS.md does mention a few quantitative figures (e.g., 'A \"fast\" Claude call is ~1–3s', '6 GiB query (our threshold)', '1 GiB scanned'), but these are scattered descriptive numbers, not pass/fail gates wired to named assumptions."
+    },
+    {
+      "text": "A single Python (or single-file) spike exists in outputs whose filename contains 'spike'. No package structure beneath outputs/.",
+      "passed": false,
+      "evidence": "No file in outputs/ contains 'spike' in its filename (verified via find). Instead the executor produced a multi-file project: equivalence.py, mcp_server.py, rewriter.py, snowflake_client.py, test_rewriter.py, plus a fixtures/ subdirectory (expensive_join.sql, explain_plan.json, rewritten_expected.sql) and packaging files (pyproject.toml, .env.example). This is exactly the package-style scaffolding the assertion forbids."
+    },
+    {
+      "text": "The spike imports the real SDKs it would use in production (e.g., snowflake-connector-python and anthropic), not mocks.",
+      "passed": true,
+      "evidence": "snowflake_client.py imports the real SDK ('import snowflake.connector') and rewriter.py imports the real Anthropic SDK ('from anthropic import Anthropic'). pyproject.toml pins 'anthropic>=0.40.0' and 'snowflake-connector-python>=3.12.0'. Mocks are only used in test_rewriter.py, not in the production-path modules."
+    },
+    {
+      "text": "The spike file has no Pydantic models, no FastAPI/MCP routes wired up, no separate config files alongside it. It is one file with hardcoded inputs.",
+      "passed": false,
+      "evidence": "The opposite of what the assertion requires. mcp_server.py wires up real MCP routes ('@server.list_tools()', '@server.call_tool()', 'stdio_server'). pyproject.toml lists 'pydantic>=2.8.0' as a dependency. Multiple separate config files exist alongside the code: pyproject.toml, .env.example, and a fixtures/ directory. Inputs are read from environment variables (os.environ['SNOWFLAKE_ACCOUNT'], etc.) rather than hardcoded."
+    },
+    {
+      "text": "A `tradeoffs.md` file exists in outputs.",
+      "passed": false,
+      "evidence": "No tradeoffs.md file exists. Directory listing shows only README.md and RISKS.md as markdown files. RISKS.md discusses tradeoffs informally but is not titled 'tradeoffs.md'."
+    },
+    {
+      "text": "`tradeoffs.md` has rows or sections for each must-hold assumption containing the assumption / gate / result / learning / pivot structure (all five elements present).",
+      "passed": false,
+      "evidence": "No tradeoffs.md file exists, so no five-element structure is present. RISKS.md sections do not contain assumption/gate/result/learning/pivot rows; they're prose risk discussions."
+    },
+    {
+      "text": "An explicit decision is stated, matching one of: build / pivot architecture / pivot narrative / stop.",
+      "passed": false,
+      "evidence": "RISKS.md section 9 says '**Yellow light.** Ship the read-only MCP server (no rewriter) in 1–2 weeks. Run a 4-week parallel investigation on the equivalence problem with a real eval set before scoping the rewriter as a production feature.' This is closer to a 'pivot architecture' (drop the rewriter, ship a smaller read-only server first), but the executor never uses the build/pivot architecture/pivot narrative/stop vocabulary explicitly. 'Yellow light' is a generic traffic-light hedge, not the framework's decision taxonomy. Marking FAIL because the assertion requires an explicit match."
+    },
+    {
+      "text": "At least one must-hold assumption is about LLM behavior (e.g., 'Claude can read EXPLAIN plans and propose a cheaper rewrite that the warehouse actually accepts and that runs faster'), with a measurable gate.",
+      "passed": false,
+      "evidence": "There are no named must-hold assumptions at all. README.md does pose 'Question 2: Can an LLM look at a Snowflake EXPLAIN plan and propose a semantically-equivalent rewrite that's measurably cheaper?' — this is the right topic, but it is framed as an open research question without a measurable gate (no numeric threshold, no pass/fail count, no go/no-go criterion). RISKS.md section 6 ('Failure modes when the LLM helps too much') discusses LLM-behavior risk but again has no pass/fail gate."
+    }
+  ],
+  "summary": {
+    "passed": 1,
+    "failed": 10,
+    "total": 11,
+    "pass_rate": 0.09
+  },
+  "execution_metrics": {
+    "tool_calls": {},
+    "total_tool_calls": null,
+    "total_steps": null,
+    "errors_encountered": null,
+    "output_chars": 36006,
+    "transcript_chars": null,
+    "note": "No metrics.json was produced for this run. output_chars is summed across all files in outputs/ including fixtures/."
+  },
+  "timing": {
+    "executor_duration_seconds": 255.765,
+    "total_duration_seconds": 255.765
+  },
+  "claims": [
+    {
+      "claim": "The spike is 'a throwaway prototype to de-risk the production server before we commit headcount' (README.md).",
+      "type": "quality",
+      "verified": false,
+      "evidence": "The artifact does not behave as a throwaway prototype. It is a multi-file project with a pyproject.toml, packaged dependencies, separate modules per concern (mcp_server / rewriter / equivalence / snowflake_client), a tests directory pattern, fixtures, and a .env.example — i.e., production scaffolding. A throwaway day-0 spike per the assertions would be a single file with hardcoded inputs."
+    },
+    {
+      "claim": "test_rewriter.py 'runs offline' and 'mocks Anthropic + Snowflake' (README.md).",
+      "type": "process",
+      "verified": true,
+      "evidence": "test_rewriter.py imports unittest.mock.MagicMock, defines a _fake_anthropic helper that returns a MagicMock for the Anthropic client, and uses inline runner functions to fake Snowflake responses. No live network calls are made."
+    },
+    {
+      "claim": "Equivalence is 'the load-bearing piece of the whole feature' and the rewriter without proven equivalence is unsafe (README.md, RISKS.md sec 1).",
+      "type": "quality",
+      "verified": true,
+      "evidence": "RISKS.md section 1 explicitly enumerates concrete failure modes of the spike's equivalence.py (probabilistic sampling can miss <0.1% filter changes; ORDER BY 1 is not deterministic with duplicate first-column values; Python type names collapse NUMBER(10,2) and NUMBER(38,0) into Decimal). These are specific, well-grounded critiques of the executor's own code."
+    },
+    {
+      "claim": "The recommendation is 'Yellow light' — ship a read-only MCP first, defer the rewriter pending a 4-week equivalence investigation (RISKS.md sec 9).",
+      "type": "factual",
+      "verified": true,
+      "evidence": "Quoted directly from RISKS.md section 9: 'Yellow light. Ship the read-only MCP server (no rewriter) in 1–2 weeks. Run a 4-week parallel investigation on the equivalence problem with a real eval set before scoping the rewriter as a production feature.'"
+    },
+    {
+      "claim": "ExplainPlan.from_json's extraction of bytesAssigned/partitionsAssigned is fragile across Snowflake versions (RISKS.md sec 4).",
+      "type": "quality",
+      "verified": true,
+      "evidence": "snowflake_client.py:from_json reads only payload['GlobalStats']['bytesAssigned'] / 'partitionsAssigned'. The has_join detection uses a recursive _walk_for_op that hardcodes 'Operation' == 'Join'. The author flags this fragility honestly in RISKS.md section 4."
+    }
+  ],
+  "user_notes_summary": {
+    "uncertainties": [],
+    "needs_review": [],
+    "workarounds": [],
+    "note": "No user_notes.md file was produced for this without-skill run."
+  },
+  "eval_feedback": {
+    "suggestions": [
+      {
+        "assertion": "An explicit decision is stated, matching one of: build / pivot architecture / pivot narrative / stop.",
+        "reason": "The executor wrote 'Yellow light' plus a coherent recommendation that effectively says 'pivot architecture' (ship smaller read-only server first, defer rewriter). A strict literal-match grading penalizes a substantively reasonable answer that just used different vocabulary. Consider clarifying whether the assertion requires the literal phrase or the underlying decision shape — and if it's the literal phrase, that's a strong signal that the skill is being graded on naming conventions rather than reasoning quality."
+      },
+      {
+        "assertion": "The spike imports the real SDKs it would use in production (e.g., snowflake-connector-python and anthropic), not mocks.",
+        "reason": "This passes here even though the surrounding deliverable violates almost every other structural assertion. A multi-file production-style scaffold can pass the SDK-import check just as easily as a real single-file spike. Consider tying this assertion to the spike-file assertion (e.g., 'the file containing \"spike\" in its name imports the real SDKs') so it can't pass on a different file."
+      },
+      {
+        "reason": "No assertion checks whether the spike actually exercises the load-bearing question (LLM-driven rewrite + equivalence) end-to-end with a real input. The without-skill run produces a much more elaborate artifact than a spike should be, but it does include test_rewriter.py that runs the rewrite + equivalence loop offline against a captured EXPLAIN fixture — which is arguably good. A 'the spike has a runnable demonstration of the load-bearing assumption' assertion would distinguish 'wrote files that look like a spike' from 'actually validated the bet.'"
+      },
+      {
+        "reason": "Several assertions are tightly coupled (must/should/nice categorization implies an assumptions file; tradeoffs five-row structure implies tradeoffs.md). When the executor doesn't produce the framework artifact at all, a cluster of assertions cascade-fails together. That's correct behavior but it makes the pass-rate signal noisier — one missing artifact knocks out 4-5 assertions. Consider whether this is desired, or whether you want a single 'used the framework' top-level assertion plus finer-grained content checks gated on it."
+      }
+    ],
+    "overall": "Assertions are well-targeted at the skill's prescribed shape (must/should/nice taxonomy, single-file spike, tradeoffs.md with five-element rows, explicit decision vocabulary). They correctly catch that the without-skill baseline produced thoughtful production-style scaffolding instead of the lean day-0 spike the framework prescribes. The main gap is that the assertions don't reward substance independent of structure — a baseline that demonstrates strong engineering judgment (as this one does) still scores ~9% because it didn't use the framework's exact vocabulary."
+  }
+}

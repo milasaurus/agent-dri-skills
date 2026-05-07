@@ -35,6 +35,18 @@ A staff-level code review with a simplification lens. Encodes the judgment about
 
 A code review that ends in observations without dispositions has not completed its job. Invoke with `/code-review`.
 
+### eng-feasibility
+
+A staff-level feasibility check that validates a project's load-bearing assumptions before any production code is written. Produces a single-file spike run against real services and a `tradeoffs.md` that turns "should we build this?" into a decidable question.
+
+- **Lists assumptions before code** — explicit, categorized list (must hold / should hold / nice if it holds); the list is what makes "is this project worth the time?" answerable
+- **Defines falsifiable go/no-go gates** — each must-hold assumption gets a measurable pass condition (e.g. "≥3/5 cases produce the expected output"); "it works" is not a gate
+- **One file, no abstractions** — the spike is disposable, hardcoded, and prints everything; production scaffolding is forbidden
+- **Records learnings and pivots in `tradeoffs.md`** — assumption / gate / result / learning / pivot per must-hold item, written as the spike runs
+- **Produces a clear decision** — build, pivot architecture, pivot narrative, or stop
+
+The image-morpher prototype is the canonical reference (`docs/plan.md` Unit 1, `spike/spike.py`) — its spike killed an LLM-as-router design on day 0 and replaced it with a user-picks-strategy plan, saving weeks of misdirected build. Invoke with `/eng-feasibility`.
+
 ## Secondary skills
 
 Curated external skills bundled in this marketplace.

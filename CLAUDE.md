@@ -1,16 +1,6 @@
 # agent-dri-skills
 
-This repo encodes staff-level engineering judgment as reusable skills for AI coding agents. Each skill captures the mental model, priorities, and failure-pattern recognition that experienced engineers develop over years, structured so an agent can apply them consistently. The goal is to scale staff engineers, not replace them.
-
-## Skills
-
-Each skill targets a staff-engineer competency — judgment that's hard to teach and expensive to learn through mistakes.
-
-- **system-design-review** — staff-level architecture review. Gates on business value, focuses on leverage points, produces dispositions (approve / approve with conditions / changes required). Invoke with `/design-review`.
-- **code** — staff-level code review with a simplification lens. Two filters first: will this code change again, and do you understand why it's the way it is. Produces dispositions (`simplify now`, `with conditions`, `encode as standard`, `leave it`, `defer`, `needs more context`). Invoke with `/code-review`.
-- **eng-feasibility** — assumption-first feasibility check before any production code. Lists assumptions, defines falsifiable go/no-go gates, runs a single-file spike against real services, records pivots in `tradeoffs.md`. Invoke with `/eng-feasibility`.
-
-Secondary skills (curated external) are listed in `README.md`.
+Staff-level engineering judgment encoded as skills for AI agents. See `README.md` for the skill catalog and install instructions.
 
 ## Planning
 
@@ -24,15 +14,6 @@ When authoring or maintaining a plan in this repo (or in plans handed to agents 
 - Slash commands live in `.claude/commands/<name>.md` and map 1:1 to skills.
 - Evals live in `skills/<name>/evals/evals.json` (skill-creator format). Eval workspaces (`*-workspace/`) are gitignored — they're regeneratable.
 - File paths in plans, skills, and command files must be repo-relative.
-
-## Commands
-
-This is a documentation/skills repo with no build step.
-
-- **Validate skills**: every `skills/*/SKILL.md` has YAML frontmatter with `name` and `description`.
-- **Install locally**: `claude --plugin-dir /path/to/agent-dri-skills`
-- **Install via marketplace**: `/plugin marketplace add github:milasaurus/agent-dri-skills` then `/plugin install agent-dri-skills`.
-- **Reload after edits**: `/reload-plugins`.
 
 ## Boundaries
 

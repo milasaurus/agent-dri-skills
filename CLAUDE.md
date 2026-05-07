@@ -2,10 +2,6 @@
 
 Staff-level engineering judgment encoded as skills for AI agents. See `README.md` for the skill catalog and install instructions.
 
-## Planning
-
-When authoring or maintaining a plan in this repo (or in plans handed to agents working on this repo), follow `PLANS.md`. It defines the bar plans must clear: cold-read self-containment, observable acceptance, decisions resolved in the plan, four living sections kept current during execution, idempotence for risky steps. Plan-authoring tools (`ce-plan`, `planning-and-task-breakdown`) are the *how*; PLANS.md is the *what good looks like*.
-
 ## Conventions
 
 - Every skill lives in `skills/<name>/SKILL.md` with YAML frontmatter (`name`, `description`).

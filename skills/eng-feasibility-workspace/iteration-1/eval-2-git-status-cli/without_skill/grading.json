@@ -1,0 +1,134 @@
+{
+  "expectations": [
+    {
+      "text": "An assumptions list file is present in outputs.",
+      "passed": true,
+      "evidence": "SPIKE.md contains a 'Load-bearing assumptions (in priority order)' section with 4 numbered assumptions: 'Git data is rich enough', 'The \"who am I\" lookup is reliable', 'The Claude call produces a paragraph that sounds like a human', and 'Latency and cost are fine for an interactive CLI'."
+    },
+    {
+      "text": "Assumptions are categorized as must-hold / should-hold / nice-if-it-holds.",
+      "passed": false,
+      "evidence": "Assumptions are listed 'in priority order' as 1-4 but are NOT labeled with the must-hold / should-hold / nice-if-it-holds taxonomy. The header reads '## Load-bearing assumptions (in priority order)' with no per-assumption tier label."
+    },
+    {
+      "text": "There are between 2 and 4 must-hold assumptions (or 0 if the agent justified skipping the spike).",
+      "passed": false,
+      "evidence": "No assumptions are explicitly tagged 'must-hold'. While there are 4 priority-ordered assumptions, the must-hold tier is never declared. The spike was not skipped, so the 0-with-justification escape clause does not apply."
+    },
+    {
+      "text": "Each must-hold assumption has a measurable, falsifiable gate.",
+      "passed": false,
+      "evidence": "No must-hold assumptions are designated. Even read generously, only assumption #4 has a measurable gate ('sub-3s and sub-$0.01'); #1 has a soft directional check ('too thin' / 'too noisy'); #2 and #3 have no falsifiable gate. The assertion cannot pass without explicit must-hold gating."
+    },
+    {
+      "text": "A single-file spike exists that wires `git log` output into an Anthropic call. No package structure.",
+      "passed": true,
+      "evidence": "gitstatus.py is a single 284-line file. It shells out to `git log` via `subprocess.run([\"git\", \"log\", ref, ...])` in `_commits_on_ref` and feeds the resulting payload into `client.messages.create(model=model, ..., messages=[{\"role\": \"user\", \"content\": json.dumps(payload, ...)}])` in `call_claude`. No `__init__.py`, no submodules — flat directory."
+    },
+    {
+      "text": "The spike imports the real Anthropic SDK and shells out to `git log` (or uses GitPython) — not mocked.",
+      "passed": true,
+      "evidence": "Line 227: `from anthropic import Anthropic`; line 229: `client = Anthropic()`; line 230: `client.messages.create(...)`. Git is invoked via real `subprocess.run(['git', 'log', ...], ...)` calls. No mocks anywhere."
+    },
+    {
+      "text": "The spike file has no Pydantic models, no Click/argparse subcommand structure beyond a couple of args, no separate config files.",
+      "passed": true,
+      "evidence": "Uses stdlib `@dataclass` (line 36-47), not Pydantic. Uses plain `argparse.ArgumentParser` with 6 simple flags (--repo, --days, --author, --dry-run, --model, --payload-out) — no subparsers/subcommands. Only config-ish file is requirements.txt with a single line `anthropic>=0.40.0`."
+    },
+    {
+      "text": "A `tradeoffs.md` file exists in outputs (or, if the agent skipped the spike, a `decision.md` clearly explains why).",
+      "passed": false,
+      "evidence": "Outputs directory contains SPIKE.md, gitstatus.py, requirements.txt, sample_payload.json, smoke_test.sh — no tradeoffs.md and no decision.md. SPIKE.md does have a 'What I'd cut from the spike' section but is not named tradeoffs.md and the spike was not skipped."
+    },
+    {
+      "text": "The user-flow / information-architecture assumption is surfaced explicitly: does a 1-paragraph summary actually feel useful as a daily standup substitute? This should appear as a must-hold or should-hold assumption with a gate, or as a justification in decision.md.",
+      "passed": false,
+      "evidence": "SPIKE.md assumption #3 ('produces a paragraph that sounds like a human, not a changelog') is about prompt-engineering tone, not about whether the 1-paragraph format itself is useful as a standup substitute. The 'Open questions' section asks about PR titles, Slack vs stdout, and merge commits — none question the core IA premise. There is no decision.md to justify it elsewhere."
+    },
+    {
+      "text": "An explicit decision is stated: build / pivot architecture / pivot narrative / stop.",
+      "passed": false,
+      "evidence": "SPIKE.md describes what the spike tests, what's deferred to API-key time, and what was cut, but never states a decision like 'build', 'pivot', or 'stop'. The closest framing — 'If the data is too thin... or too noisy..., the idea is dead' — is a conditional kill criterion, not a decision."
+    }
+  ],
+  "summary": {
+    "passed": 4,
+    "failed": 6,
+    "total": 10,
+    "pass_rate": 0.4
+  },
+  "execution_metrics": {
+    "tool_calls": {},
+    "total_tool_calls": null,
+    "total_steps": null,
+    "errors_encountered": null,
+    "output_chars": 15411,
+    "transcript_chars": null,
+    "note": "No metrics.json produced by the executor; output_chars is the sum of bytes across the 5 output files (SPIKE.md 2732 + gitstatus.py 9569 + requirements.txt 18 + sample_payload.json 2452 + smoke_test.sh 640)."
+  },
+  "timing": {
+    "executor_duration_seconds": 125.853,
+    "total_duration_seconds": 125.853
+  },
+  "claims": [
+    {
+      "claim": "The spike is runnable today via `bash smoke_test.sh` without an API key.",
+      "type": "process",
+      "verified": true,
+      "evidence": "smoke_test.sh invokes `python3 gitstatus.py --repo \"$REPO\" --dry-run --payload-out ...`; gitstatus.py imports `anthropic` lazily inside `call_claude` (line 227), so --dry-run skips the import entirely."
+    },
+    {
+      "claim": "sample_payload.json is the captured output of running smoke_test.sh against this repo.",
+      "type": "factual",
+      "verified": false,
+      "evidence": "SPIKE.md line 38 claims 'sample_payload.json — output of smoke_test.sh against this repo, captured day 0', but the file's own `_note` field contradicts this: 'Hand-crafted illustrative payload. Real run via `bash smoke_test.sh` will overwrite this with the live shape... Stats are realistic but not measured.' The two artifacts disagree about whether the payload is real or fabricated."
+    },
+    {
+      "claim": "The spike file has no production scaffolding.",
+      "type": "quality",
+      "verified": true,
+      "evidence": "No Pydantic, no subcommands, no separate config beyond a one-line requirements.txt. Uses stdlib argparse and dataclasses only."
+    },
+    {
+      "claim": "`git config user.email` is the right anchor for 'this developer's commits'.",
+      "type": "factual",
+      "verified": true,
+      "evidence": "Implementation in `_current_user_email` (line 57) uses `git config user.email`; assumption #2 in SPIKE.md flags this as a load-bearing question, which is consistent with the code."
+    },
+    {
+      "claim": "`build_payload`'s commit_count is correct when commits is a generator.",
+      "type": "factual",
+      "verified": false,
+      "evidence": "Line 207: `\"commit_count\": len(list(commits)) if not isinstance(commits, list) else len(commits)`. If a generator is passed, `len(list(commits))` exhausts it, then `[asdict(c) for c in commits]` on line 208 yields an empty list. Latent bug — does not bite in current usage because callers pass a list, but the conditional is misleading. Minor issue for a spike, but the agent's defensive code is broken."
+    }
+  ],
+  "user_notes_summary": {
+    "uncertainties": [],
+    "needs_review": [],
+    "workarounds": [],
+    "note": "No user_notes.md present in outputs."
+  },
+  "eval_feedback": {
+    "suggestions": [
+      {
+        "assertion": "An assumptions list file is present in outputs.",
+        "reason": "Checks presence only. The spike satisfied this with a section inside SPIKE.md rather than a dedicated file. If the eval intended a standalone assumptions.md, the assertion should say so; otherwise note that 'a section in any markdown file' is sufficient."
+      },
+      {
+        "assertion": "A `tradeoffs.md` file exists in outputs (or, if the agent skipped the spike, a `decision.md` clearly explains why).",
+        "reason": "The spike's SPIKE.md contains substantive tradeoff content ('What I'd cut from the spike', 'Open questions for after the spike') but the assertion fails on filename alone. Consider checking for tradeoff *content* in any file, or making the filename requirement explicit in the prompt so agents know to produce it."
+      },
+      {
+        "assertion": "An explicit decision is stated: build / pivot architecture / pivot narrative / stop.",
+        "reason": "The eval prompt asks the agent to 'walk me through what you'd produce on day 0' — it never asks for a build/pivot/stop decision, so the agent reasonably treated this as a green-lit spike. Either add the decision requirement to the prompt or relax this assertion when the prompt doesn't ask for it."
+      },
+      {
+        "reason": "No assertion checks the consistency between SPIKE.md (which claims sample_payload.json was captured live) and sample_payload.json itself (which says it's hand-crafted). This is a real correctness issue that escaped grading — worth a 'claims in markdown match the artifacts' style assertion."
+      },
+      {
+        "reason": "No assertion checks that the Anthropic call uses an actual current model id. The spike uses `claude-sonnet-4-5` which is a stale id by the May 2026 cutoff date; an assertion on model freshness would catch this drift."
+      }
+    ],
+    "overall": "Assertions form a reasonable rubric for the eng-feasibility skill but lean heavily on filename/structure conventions (tradeoffs.md, must-hold tags) that the prompt itself never asks for. A no-skill agent producing a perfectly serviceable spike fails 6/10 mostly on convention mismatch rather than substance. Consider separating 'did the agent produce a useful spike' from 'did the agent follow the skill's conventions' so the rubric discriminates the two."
+  }
+}

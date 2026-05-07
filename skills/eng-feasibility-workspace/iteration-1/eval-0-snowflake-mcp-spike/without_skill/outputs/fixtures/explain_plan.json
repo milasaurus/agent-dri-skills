@@ -1,0 +1,87 @@
+{
+  "GlobalStats": {
+    "partitionsAssigned": 4821,
+    "partitionsTotal": 4821,
+    "bytesAssigned": 6442450944
+  },
+  "Operations": [
+    {
+      "Operation": "Result",
+      "id": 0,
+      "objects": ["RESULT"],
+      "expressions": ["O.*", "C.*", "LI.*", "P.*"],
+      "children": [
+        {
+          "Operation": "Join",
+          "id": 1,
+          "objects": ["INNER"],
+          "expressions": ["P.PRODUCT_ID = LI.PRODUCT_ID"],
+          "children": [
+            {
+              "Operation": "Join",
+              "id": 2,
+              "objects": ["INNER"],
+              "expressions": ["LI.ORDER_ID = O.ORDER_ID"],
+              "children": [
+                {
+                  "Operation": "Join",
+                  "id": 3,
+                  "objects": ["INNER"],
+                  "expressions": ["C.CUSTOMER_ID = O.CUSTOMER_ID"],
+                  "children": [
+                    {
+                      "Operation": "Filter",
+                      "id": 4,
+                      "expressions": ["O.ORDER_TS >= '2025-01-01'", "O.ORDER_TS < '2025-02-01'"],
+                      "children": [
+                        {
+                          "Operation": "TableScan",
+                          "id": 5,
+                          "objects": ["ANALYTICS.PUBLIC.ORDERS"],
+                          "partitionsAssigned": 31,
+                          "partitionsTotal": 1450,
+                          "bytesAssigned": 268435456
+                        }
+                      ]
+                    },
+                    {
+                      "Operation": "Filter",
+                      "id": 6,
+                      "expressions": ["C.REGION = 'NA'"],
+                      "children": [
+                        {
+                          "Operation": "TableScan",
+                          "id": 7,
+                          "objects": ["ANALYTICS.PUBLIC.CUSTOMERS"],
+                          "partitionsAssigned": 12,
+                          "partitionsTotal": 12,
+                          "bytesAssigned": 83886080
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "Operation": "TableScan",
+                  "id": 8,
+                  "objects": ["ANALYTICS.PUBLIC.LINE_ITEMS"],
+                  "partitionsAssigned": 4720,
+                  "partitionsTotal": 4720,
+                  "bytesAssigned": 5905580032
+                }
+              ]
+            },
+            {
+              "Operation": "TableScan",
+              "id": 9,
+              "objects": ["ANALYTICS.PUBLIC.PRODUCTS"],
+              "partitionsAssigned": 58,
+              "partitionsTotal": 58,
+              "bytesAssigned": 184549376
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

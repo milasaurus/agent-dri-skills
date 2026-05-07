@@ -1,0 +1,26 @@
+{
+  "skill_name": "eng-feasibility",
+  "evals": [
+    {
+      "id": 0,
+      "eval_name": "snowflake-mcp-spike",
+      "prompt": "I want to build an MCP server that lets Claude query our internal Snowflake warehouse and rewrites SQL on the fly when joins get expensive (using an LLM to inspect EXPLAIN plans and propose a cheaper rewrite). Spike this before I commit to building the production server. Don't actually run anything against Snowflake or Anthropic — assume no credentials in this environment — but produce the artifacts you would create on day 0.",
+      "expected_output": "Assumptions list (categorized must-hold / should-hold / nice-if-it-holds), single-file spike script that would exercise the must-hold assumptions end-to-end, tradeoffs.md scaffold with the assumption / gate / result / learning / pivot structure, and an explicit decision recommendation (build / pivot architecture / pivot narrative / stop) given how each gate is most likely to land.",
+      "files": []
+    },
+    {
+      "id": 1,
+      "eval_name": "llm-recommender-pipeline",
+      "prompt": "We're thinking about replacing our recommendation pipeline with an LLM that takes user history (last 50 events as JSON) and outputs a ranked list of 20 item IDs. Should we just start building or do we need to validate something first? If a spike is worth doing, build it. Don't actually call any real APIs — assume no credentials — but produce the spike files you would have written on day 0.",
+      "expected_output": "Either a justified 'don't spike, just build' answer with reasoning, or: assumptions list, a single-file spike, tradeoffs.md scaffold, and a decision. If a spike: must-hold assumptions should include behavior bets (LLM produces a stable ranked list, output is parseable, the ranking is meaningfully better than the existing pipeline) and latency/cost gates.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "eval_name": "git-status-cli",
+      "prompt": "Spike this idea: a CLI tool that reads a developer's recent git history (last 7 days, current branch, all branches they've committed on) and produces a 1-paragraph status update written by Claude. Real services, not mocks — but assume no API key is available right now, so the spike code should be runnable when keys are added. Walk me through what you'd produce on day 0.",
+      "expected_output": "Assumptions list, single-file Python spike that wires git log output into an Anthropic call, tradeoffs.md scaffold, and a decision. Must-hold assumptions should include API-capability and model-behavior items; the user-flow assumption (does a 1-paragraph summary actually feel useful as a daily standup substitute?) should be surfaced explicitly.",
+      "files": []
+    }
+  ]
+}

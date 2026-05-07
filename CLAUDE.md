@@ -2,16 +2,6 @@
 
 This repo encodes staff-level engineering judgment as reusable skills for AI coding agents. Each skill captures the mental model, priorities, and failure-pattern recognition that experienced engineers develop over years, structured so an agent can apply them consistently. The goal is to scale staff engineers, not replace them.
 
-## Project Structure
-
-```
-skills/                    Primary skills, one directory per skill (SKILL.md + optional evals/)
-.claude/commands/          Slash commands that invoke skills
-PLANS.md                   Planning doctrine — augments any plan-authoring tool
-README.md                  Marketplace overview and installation
-LICENSE                    MIT
-```
-
 ## Skills
 
 Each skill targets a staff-engineer competency — judgment that's hard to teach and expensive to learn through mistakes.

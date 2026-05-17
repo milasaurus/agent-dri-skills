@@ -13,7 +13,7 @@
         "source": "github",
         "repo": "milasaurus/agent-dri-skills"
       },
-      "description": "Staff+ Engineering skills for AI agents — system design review and code review with a simplification lens."
+      "description": "Staff+ Engineering skills for AI agents — system design review, code review, engineering feasibility, and multi-agent architecture design."
     },
     {
       "name": "langfuse",

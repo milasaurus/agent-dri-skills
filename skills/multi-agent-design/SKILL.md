@@ -192,6 +192,15 @@ are not independent reasons to go multi-agent.
 Write the decision and the specific reason. A design that goes multi-agent
 without documenting why is carrying hidden load-bearing assumptions.
 
+**This gate applies to every proposed agent boundary, not just the initial
+multi-agent decision.** A system that justifies multi-agent via trust isolation
+and then adds a planner/editor split on top of that justified architecture has
+re-introduced the specialization problem inside a valid shell. Each boundary
+stands or falls on its own reason — the four valid reasons above apply per
+boundary, not once at the system level. After the initial decision is made,
+enumerate every proposed agent boundary and run this gate on each one
+individually before proceeding to topology selection.
+
 ### 3. Select a topology
 
 Four topologies cover the majority of multi-agent use cases. Each maps to a
@@ -554,6 +563,11 @@ insufficient, not before.
   context-sharing problem.
 - A compressor model or sequential single-threaded approach was not evaluated
   before reaching for parallel agents to solve a context-window problem.
+- An agent boundary exists whose sole justification is that the agent "owns" a
+  domain or role. Domain ownership is specialization by another name. A
+  "planner agent," "writer agent," or "editor agent" whose boundary isn't backed
+  by one of the four valid reasons must be collapsed into the main reasoning
+  agent.
 
 ## Dispositions
 
@@ -584,6 +598,11 @@ four dispositions has not completed its job.
 Before closing, the agent should be able to answer:
 
 - Is the decision to use multiple agents documented with a specific reason?
+- For each proposed agent boundary: is the reason for that specific boundary
+  one of the four valid reasons (provably independent parallelism, context
+  window hard limit, trust/capability isolation, distributed team ownership)?
+  If the reason is specialization alone — the agent "owns" a domain or role —
+  the boundary must be collapsed.
 - Is a single topology named, justified over the primary alternative, and
   matched to the task's dependency structure?
 - Has compound pipeline reliability been calculated (`p^N`)? Does the result

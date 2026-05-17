@@ -2,6 +2,12 @@
 
 Staff+ engineering skills for AI agents.
 
+## Why
+
+AI agents can follow instructions, but they don't bring judgment. When you ask an agent to review a system design, it produces observations, not the kind of pointed, experience-driven feedback a staff engineer in the real world would give. It won't push back on a missing business case, won't zero in on the data model as the highest-leverage risk, and won't tell you whether the design is actually ready to ship.
+
+This repo encodes that judgment as reusable skills. Each skill captures the mental model, priorities, and failure pattern recognition that experienced engineers develop over years, structured so an agent can apply them consistently. The goal isn't to replace staff eng, but to scale them: every team gets an experienced staff eng that catches the things that are easy to miss and expensive to fix later.
+
 ## Skills
 
 | Skill | What it does | Invoke |
@@ -34,10 +40,6 @@ claude --plugin-dir /path/to/agent-dri-skills
 ```
 
 Edit any `SKILL.md` and run `/reload-plugins` to pick up changes without restarting.
-
-## Why
-
-AI agents can follow instructions but don't bring judgment. This repo encodes the mental model, priorities, and failure pattern recognition that experienced engineers develop over years — structured so an agent can apply them consistently.
 
 ## License
 

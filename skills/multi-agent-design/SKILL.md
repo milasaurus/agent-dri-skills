@@ -152,6 +152,19 @@ Before choosing a topology, confirm what the system is actually doing.
 - Name any irreversible actions in the workflow. These require human-in-the-loop
   checkpoints regardless of topology.
 
+**If the system is an existing codebase, read it before forming any topology
+opinion.** At minimum: the entry point, the agent loop, the tool definitions,
+and any existing orchestration logic. Do not propose a topology based on a
+description alone — the code is the ground truth. A description says what
+someone thinks the system does; the code says what it actually does. These
+diverge, and the divergence is usually where the interesting constraints live.
+
+Concretely: use `list_files` or `find` to locate the agent loop and
+orchestration layer, read those files, then proceed to step 2. If you cannot
+read the codebase, state that explicitly in the ADR as an open question and flag
+any topology assumptions that depend on implementation details you haven't
+verified.
+
 ### 2. Decide: single agent or multi-agent?
 
 **Default to single agent.** Multi-agent adds coordination overhead, latency,
@@ -568,6 +581,10 @@ insufficient, not before.
   "planner agent," "writer agent," or "editor agent" whose boundary isn't backed
   by one of the four valid reasons must be collapsed into the main reasoning
   agent.
+- The ADR proposes a topology for an existing system without evidence that the
+  codebase was read. A design based on a verbal description of an existing system
+  is not an architecture decision — it's a guess. For existing systems, the code
+  is the brief.
 
 ## Dispositions
 

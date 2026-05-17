@@ -152,6 +152,19 @@ Before choosing a topology, confirm what the system is actually doing.
 - Name any irreversible actions in the workflow. These require human-in-the-loop
   checkpoints regardless of topology.
 
+**If the system is an existing codebase, read it before forming any topology
+opinion.** At minimum: the entry point, the agent loop, the tool definitions,
+and any existing orchestration logic. Do not propose a topology based on a
+description alone — the code is the ground truth. A description says what
+someone thinks the system does; the code says what it actually does. These
+diverge, and the divergence is usually where the interesting constraints live.
+
+Concretely: use `list_files` or `find` to locate the agent loop and
+orchestration layer, read those files, then proceed to step 2. If you cannot
+read the codebase, state that explicitly in the ADR as an open question and flag
+any topology assumptions that depend on implementation details you haven't
+verified.
+
 ### 2. Decide: single agent or multi-agent?
 
 **Default to single agent.** Multi-agent adds coordination overhead, latency,
@@ -191,6 +204,15 @@ are not independent reasons to go multi-agent.
 
 Write the decision and the specific reason. A design that goes multi-agent
 without documenting why is carrying hidden load-bearing assumptions.
+
+**This gate applies to every proposed agent boundary, not just the initial
+multi-agent decision.** A system that justifies multi-agent via trust isolation
+and then adds a planner/editor split on top of that justified architecture has
+re-introduced the specialization problem inside a valid shell. Each boundary
+stands or falls on its own reason — the four valid reasons above apply per
+boundary, not once at the system level. After the initial decision is made,
+enumerate every proposed agent boundary and run this gate on each one
+individually before proceeding to topology selection.
 
 ### 3. Select a topology
 
@@ -554,6 +576,15 @@ insufficient, not before.
   context-sharing problem.
 - A compressor model or sequential single-threaded approach was not evaluated
   before reaching for parallel agents to solve a context-window problem.
+- An agent boundary exists whose sole justification is that the agent "owns" a
+  domain or role. Domain ownership is specialization by another name. A
+  "planner agent," "writer agent," or "editor agent" whose boundary isn't backed
+  by one of the four valid reasons must be collapsed into the main reasoning
+  agent.
+- The ADR proposes a topology for an existing system without evidence that the
+  codebase was read. A design based on a verbal description of an existing system
+  is not an architecture decision — it's a guess. For existing systems, the code
+  is the brief.
 
 ## Dispositions
 
@@ -584,6 +615,11 @@ four dispositions has not completed its job.
 Before closing, the agent should be able to answer:
 
 - Is the decision to use multiple agents documented with a specific reason?
+- For each proposed agent boundary: is the reason for that specific boundary
+  one of the four valid reasons (provably independent parallelism, context
+  window hard limit, trust/capability isolation, distributed team ownership)?
+  If the reason is specialization alone — the agent "owns" a domain or role —
+  the boundary must be collapsed.
 - Is a single topology named, justified over the primary alternative, and
   matched to the task's dependency structure?
 - Has compound pipeline reliability been calculated (`p^N`)? Does the result

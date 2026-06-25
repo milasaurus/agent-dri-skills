@@ -1,14 +1,16 @@
 ---
 name: code
-description: Staff-level code review with a simplification lens. Prioritizes hot spots, leverage points, and alignment with the codebase's direction over cosmetic cleanup. Produces a clear disposition per candidate — simplify now, with conditions, encode as standard, leave it, defer, or needs more context.
+description: Staff-level code review with two lenses — a simplification lens (when to clean up code that works) and a design-smell lens (correctness and architecture issues a cleanup pass misses — persisted-vs-derived state, soft-vs-hard enforcement, drifted invariants, contingent properties, single-source-of-truth violations). Prioritizes hot spots, leverage points, and alignment with the codebase's direction. Produces a clear disposition per candidate — simplify now, with conditions, encode as standard, leave it, defer, or needs more context.
 trigger:
   - "A pull request or branch is ready for a staff-level code review."
   - "A team asks whether code that works is also clean enough to maintain."
   - "An engineer flags accumulated complexity and asks where to invest first."
+  - "A change introduces a new field, mode, flag, or stored state and you want the design reviewed, not just the style."
 archetypes:
   - staff-reviewer
   - tech-lead
   - reviewer
+  - design-reviewer
 ---
 
 ## Overview
@@ -261,6 +263,103 @@ inside one simplification pass.
    it should live), the simplification, the payoff, and the
    cost. Dispositions without a surface are observations, not
    reviews.
+
+## Design-Smell Lens
+
+The process above asks "is this code harder to read than it
+needs to be?" This lens asks a different question: "is this
+design *wrong* in a way that will generate bugs or lifecycle
+pain?" Run it as a second pass over the same diff. It shares
+the gating discipline — understand the code first (Chesterton's
+Fence), stay in scope, and ground every claim in the source at
+the exact revision under review.
+
+The unit of value here is naming the *pattern-class* behind a
+change, not the line. A finding that says "this stored field is
+derivable from the mode, so it drags filtering, throttle, and
+cleanup machinery" lands and transfers; "rename this variable"
+does not. For each lens below, the trigger question is the tool.
+
+1. **Persisted vs derived state.** Is this stored when it is a
+   pure function of other state? Stored-derived data drags
+   lifecycle machinery behind it — visibility filtering,
+   dedup/throttle, cleanup on the inverse operation, and drift
+   when the copy disagrees with its source. Trigger: "what has
+   to happen when this is created, hidden, and undone?" The fix
+   is usually to recompute it at use time and delete the
+   machinery. Disposition: leverage point — often
+   `Simplify with conditions`, since removing a persisted field
+   touches every writer and reader.
+
+2. **Affordance vs guarantee (soft vs hard enforcement).** A
+   UI label, mode, or flag implies a constraint ("read-only",
+   "admin-only", "frozen"). Is it enforced by *capability*
+   (impossible to violate) or by *instruction/convention*
+   (trusted to be honored)? Name the gap plainly: "looks
+   locked, only asked-nicely locked." Trigger: "is this a
+   security boundary or a UX affordance — and is that an
+   explicit, reviewed choice?" Soft enforcement is a legitimate
+   choice; an *unexamined* soft constraint masquerading as a
+   guarantee is the bug. Disposition: `Needs more context` —
+   surface the decision to the author; if it must be a
+   guarantee, the gate belongs in code, not prose.
+
+3. **Stated invariant vs actual code.** Comments and docstrings
+   assert invariants ("these two lists stay in sync", "the
+   schemas are identical across paths") that other code quietly
+   depends on. Trigger: "is the claim true, and what relies on
+   it?" Verify the assertion against the code, then find the
+   consumers of the assumption. A load-bearing comment that has
+   drifted from the code is a latent bug with a long fuse.
+
+4. **Contingent vs guaranteed property.** A desirable property
+   ("these never collide", "this is always cached") may hold
+   only by default and collapse under failover, a config
+   override, a retry, or an equivalent-but-different runtime
+   path. Trigger: "under what conditions does this stop being
+   true?" Keep the caveat attached to the claim instead of
+   stating the happy path as if it were invariant.
+
+5. **Second-order effects / lifecycle.** Good design feedback
+   states what a change *enables or removes*, not just what it
+   does. For any new field, entity, or mode, trace the full
+   lifecycle: who writes it, who reads it, is the store shared
+   between actors, does it have complete CRUD — and, most
+   revealing, what happens on the *inverse* operation
+   (toggle-back, delete, exit, downgrade)? The bug usually
+   hides in the inverse that nobody implemented.
+
+6. **Single source of truth.** Is the same fact represented in
+   two places that can disagree — a column and a JSONB key, a
+   cache and its origin, a frontend constant and a backend
+   enum? Trigger: "if these drift, who wins, and how would we
+   notice?" Collapse to one authoritative home and derive the
+   rest. Disposition: leverage point.
+
+7. **Quantify the trade-off.** When a design choice is defended
+   or attacked with "it's expensive" / "it's faster" / "it
+   breaks the cache", do not accept the hand-wave. Find the
+   actual marginal cost and the breakpoint. Often the feared
+   cost is already paid elsewhere (a model swap already
+   cold-started the cache, so a per-mode change adds nothing)
+   or is bounded to a rare path. A number turns an argument
+   into a decision.
+
+Operationalize the lens like the simplification pass: walk the
+diff once per question (or fan out one reviewer per lens on a
+large change), name the pattern-class for each finding, then
+**adversarially verify before reporting** — re-read the cited
+code at the revision under review, re-check line numbers after
+any rebase or merge, and watch for stale paths (a renamed or
+obsolete directory) and claims that no longer hold at the
+current head. When comparing two review passes, separate a real
+code change from rater variance; do not report a different
+score as a regression.
+
+Design-smell findings carry the same disposition vocabulary as
+simplification candidates, plus a one-line recommendation — and
+a recommendation, not an option survey. If you are weighing two
+fixes, name the one you would pick and why.
 
 ## Language-Specific Patterns
 
@@ -536,6 +635,22 @@ not try to do all those jobs in one review.
   checks (no linter, no formatter, no type checker), and the
   review treats this as background rather than as the highest-
   leverage recommendation it can make.
+- A finding stated as fact but never verified against the code
+  at the revision under review — a pre-rebase line number, a
+  stale or renamed path, or a claim that no longer holds at the
+  current head.
+- A "read-only", "frozen", or "admin-only" constraint enforced
+  only by instruction or convention, presented as if it were a
+  hard guarantee.
+- State persisted when it is derivable from other state,
+  dragging visibility-filtering, throttle, or cleanup machinery
+  that would vanish if it were recomputed at use time.
+- The same fact stored in two places that can drift (a column
+  and a JSONB key, a cache and its origin, a frontend constant
+  and a backend enum) with no defined winner.
+- Design feedback that stops at the surface symptom instead of
+  naming the pattern-class and tracing the inverse operation
+  (toggle-back, delete, exit).
 
 ## Verification
 
@@ -570,3 +685,12 @@ Before closing the review, the agent should be able to answer:
   in priority order? A simplification review that ends in a
   list of observations without dispositions has not completed
   its job.
+- For design-smell findings, was each claim verified against
+  the source at the revision under review — not a stale path or
+  a pre-rebase line number?
+- Did design feedback name the pattern-class and trace the
+  lifecycle, including the inverse operation, rather than
+  stopping at the symptom?
+- For any new field, mode, or stored state: is it derived where
+  it could be, enforced where it claims to be, single-sourced,
+  and complete on the inverse operation?

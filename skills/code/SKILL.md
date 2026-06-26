@@ -480,10 +480,24 @@ because the code reads as if the job is done:
   release). Disposition: `Encode as standard` — the parity itself
   is the convention; if it recurs, a workflow template beats
   per-file review.
+- **Generator/serializer tested only on the happy path.** A
+  function that renders a list, joins with a delimiter, or
+  serializes a collection gets tested with one-or-more elements
+  but never the *empty* (or single-element, or degenerate) input
+  — which is exactly where separator/terminator logic breaks: a
+  leading or trailing comma, a dangling delimiter, an empty body
+  that emits invalid output (`[\n,\n]` instead of `[]`). Trigger:
+  "what does this emit for zero elements?" The happy-path test
+  passing is not coverage of the boundary that ships broken.
+  Worse when a *sibling* contract already blesses the empty case
+  (a projection whose own test asserts `== []`) while the
+  serializer of it chokes. Disposition: `Simplify now` — fix the
+  off-by-one terminator and add the explicit empty-input test.
 
-The unifying question for both: a guard is only as strong as the
-*tightest* thing it actually checks, not the property its name or
-docstring claims. Read the assertion, not the label.
+The unifying question across all three: a guard is only as strong
+as the *tightest* thing it actually checks, not the property its
+name or docstring claims. Read the assertion, not the label — and
+feed it the input most likely to break it.
 
 ### Weight findings by failure mode — silent beats loud
 
@@ -943,6 +957,9 @@ Before closing the review, the agent should be able to answer:
   enforce the property its name/docstring claims (closed-set, not
   open-set), and does a new workflow match its sibling's caching
   and version-pinning?
+- For each generator/serializer: is the empty (and degenerate)
+  input tested, not just the happy path — the boundary where
+  separator/terminator logic ships broken output?
 - For each finding, is its failure mode named (loud vs silent),
   and are silent failures ranked above equally-severe loud ones?
 - Were the review's own fixes re-reviewed, with every consumer of

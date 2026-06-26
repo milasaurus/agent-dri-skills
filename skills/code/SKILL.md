@@ -379,6 +379,22 @@ lens above is "known":
   the iteration history to score yourself. If you cannot run
   blind (the fixes are already in the diff under review), say so
   explicitly and review the *first commit's* state, not HEAD.
+- **Citing other reviewers as evidence.** A finding's weight
+  comes from your own analysis and your own validation — never
+  from "another reviewer (or a bot) flagged this too."
+  Corroboration is the answer key in disguise: it makes a finding
+  *feel* confirmed without your having confirmed it, and it
+  launders an unverified claim into a reported one. Do not write
+  "X also flagged this" as support, and do not let a thread you
+  read stand in for analysis you didn't do. Every finding you
+  report must trace to the code at the revision under review,
+  walked yourself — and where the claim is mechanical, **proven
+  by a test you wrote that fails on the current code**. A finding
+  you can reproduce needs no corroboration; one you can't is not
+  ready to report, no matter who else raised it. (The flip side:
+  if a thread raises something you did *not* independently reach,
+  treat it as a new lead to verify from scratch, not a finding to
+  echo.)
 - **Having the lens but not walking it.** Knowing "persisted vs
   derived" exists does not surface the persisted field — you
   have to walk the diff once per question and force a yes/no on
@@ -882,6 +898,10 @@ surfaces on commit one instead of in the iteration round.
   bot comments, or later commits — reverse-derived from the
   fixes and presented as if predicted. A review run with the
   answer key is a changelog, not a review.
+- A finding justified by "another reviewer / a bot also flagged
+  this" instead of standing on its own analysis and validation —
+  corroboration laundering an unverified claim into a reported
+  one. If it's real, reproduce it; if you can't, don't report it.
 - A new mode / flag / stored field reviewed without enumerating
   its representations, its inverse, its legacy/rename path, and
   its constraint type. The forcing enumeration was skipped.
@@ -947,6 +967,9 @@ Before closing the review, the agent should be able to answer:
 - Were the design-smell findings produced from the first commit
   *before* reading the iteration history or other reviewers'
   comments — not reverse-derived from the fixes?
+- Does each finding stand on its own analysis and validation —
+  ideally a test that fails on the current code — rather than on
+  another reviewer's or a bot's agreement?
 - For each new mode / flag / field, was the forcing enumeration
   run (representations, derived?, inverse, legacy/rename path,
   same-turn ordering, constraint type)?

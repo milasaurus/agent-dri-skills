@@ -434,6 +434,43 @@ that turn a working PR into a well-designed one, and surfacing
 them early saves the iteration round that discovers them the
 hard way.
 
+### Guard & test completeness — does the check deliver what it claims
+
+A guard, assertion, or CI job that *looks* like it enforces a
+property but only enforces a weaker one is worse than none — it
+buys false confidence. Two classes recur and are easy to miss
+because the code reads as if the job is done:
+
+- **Open-set assertion claiming to "lock."** A test whose
+  docstring says "lock in the public surface" / "this can never
+  grow" but asserts with a *subset/contains* check
+  (`expected.issubset(actual)`, "x in result", "at least these
+  keys") only catches *removals*, never *additions*. A new
+  accidental export, leaked symbol, or extra field sails through.
+  Trigger: "does this assertion fail when something is *added*,
+  or only when something is *removed*?" The fix is a closed-set
+  assertion (`actual == expected`, or an explicit allowlist that
+  fails loudly with the diff). Disposition: `Simplify now` —
+  the test already exists; it just has to actually bound the set.
+- **New CI workflow that should mirror a sibling.** A workflow
+  added to guard a new codegen/drift/schema check, while a
+  sibling guard (`check-*-schema.yaml`, an existing drift job)
+  already solved the same problems — dependency caching, store
+  paths, frozen-lockfile installs, version pinning, concurrency
+  groups. The new one silently drops them. Trigger: "is there an
+  existing workflow of this shape, and does the new one match its
+  setup?" Diff the new workflow against its nearest sibling and
+  flag every step the sibling has that this one lacks — a missing
+  cache is wasted minutes every run; a missing version pin is a
+  byte-stability hole (the guard false-fails on an upstream
+  release). Disposition: `Encode as standard` — the parity itself
+  is the convention; if it recurs, a workflow template beats
+  per-file review.
+
+The unifying question for both: a guard is only as strong as the
+*tightest* thing it actually checks, not the property its name or
+docstring claims. Read the assertion, not the label.
+
 ## Language-Specific Patterns
 
 This section augments the language-agnostic process with idiomatic
@@ -801,6 +838,10 @@ surfaces on commit one instead of in the iteration round.
   move (derive-at-render-time, untyped-bag → typed-column) to
   resolve it. Naming the smell without naming the refactor is
   half a review.
+- A test or guard trusted by its name/docstring rather than its
+  assertion — an open-set check (`issubset`, "x in result")
+  behind a "locks the surface" claim, or a new CI workflow that
+  drops the caching / version-pinning its sibling guard has.
 
 ## Verification
 
@@ -853,3 +894,7 @@ Before closing the review, the agent should be able to answer:
 - Where a smell was found, did the review name the architectural
   move that resolves it (derive-at-render-time, untyped-bag →
   typed-column) rather than only describing the smell?
+- For each guard, test, or CI job: does its assertion actually
+  enforce the property its name/docstring claims (closed-set, not
+  open-set), and does a new workflow match its sibling's caching
+  and version-pinning?

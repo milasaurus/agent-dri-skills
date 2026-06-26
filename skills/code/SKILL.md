@@ -361,6 +361,116 @@ simplification candidates, plus a one-line recommendation — and
 a recommendation, not an option survey. If you are weighing two
 fixes, name the one you would pick and why.
 
+### Forcing discipline — run the lens blind, then enumerate
+
+The lens only earns its keep if it runs *before* the answers
+exist. Two failure modes make a review worthless even when every
+lens above is "known":
+
+- **Reviewing with the answer key.** If you have the PR's later
+  commits, the bot comments, or the review threads in front of
+  you, you will reverse-derive findings from the fixes and
+  present them as if you predicted them. That is not a review —
+  it is a changelog. Produce your design-smell findings from the
+  **first commit alone**, write them down, and only then read
+  the iteration history to score yourself. If you cannot run
+  blind (the fixes are already in the diff under review), say so
+  explicitly and review the *first commit's* state, not HEAD.
+- **Having the lens but not walking it.** Knowing "persisted vs
+  derived" exists does not surface the persisted field — you
+  have to walk the diff once per question and force a yes/no on
+  each new entity. The lens is a checklist to *execute*, not a
+  glossary to cite after the fact.
+
+**Forcing enumeration for any new mode / flag / stored field.**
+When a diff introduces a mode, flag, status, or stored field,
+do not free-associate — mechanically answer all of these, and
+each "no" or "two places" is a finding:
+
+1. **Enumerate every representation of the fact.** UI state,
+   localStorage, request flag, JSONB key, typed column, in-memory
+   context field. List them. Every pair that can disagree is a
+   single-source-of-truth finding (lens 6).
+2. **Is it derived?** If it is a pure function of other state,
+   is it being *stored*? If so, what machinery does the storage
+   drag — visibility filters, provenance, throttle, cleanup?
+   (lens 1)
+3. **Trace the inverse.** Toggle-back, exit, delete, downgrade —
+   is it implemented? (lens 5)
+4. **Trace the legacy / rename path.** If this renames or
+   replaces an existing representation, what happens to *in-flight*
+   state still carrying the old one? Enumerate every reader and
+   writer of the old name across every layer. A rename that only
+   updates the new reader silently strands old state. (lens 5)
+5. **Same-turn ordering.** If the value can change mid-request,
+   is anything stamped from a *cached copy* of it before the
+   value is re-resolved? (lens 4)
+6. **Constraint type.** If the mode implies a constraint
+   (read-only, frozen, admin), is it a capability or an
+   instruction — and is that gap an explicit, reviewed choice?
+   (lens 2)
+
+**Two architectural moves to recommend by name.** A staff review
+does not stop at "this smells" — it names the refactor. These two
+recur often enough to keep in the holster:
+
+- **Persist → derive-at-render-time.** When a derived artifact
+  (a synthetic message, a denormalized flag, a computed banner)
+  is being persisted, recommend recomputing it at the boundary
+  where it is consumed. The payoff is not the field — it is the
+  *deletion of the machinery the field dragged*: provenance
+  carve-outs, visibility filters, dedup/throttle bookkeeping.
+  This is usually the single highest-leverage simplification in
+  a stateful change.
+- **Untyped bag → typed column / field.** When a new semantic
+  value is being stuffed into a JSONB blob, a `dict` of options,
+  or a stringly-typed bag, recommend promoting it to a typed
+  column (or field) with a migration and a *documented legacy
+  fallback read* during the transition. One authoritative home,
+  indexable, type-checked, with a bounded drift window.
+
+Recommend these proactively on commit one — they are the moves
+that turn a working PR into a well-designed one, and surfacing
+them early saves the iteration round that discovers them the
+hard way.
+
+### Guard & test completeness — does the check deliver what it claims
+
+A guard, assertion, or CI job that *looks* like it enforces a
+property but only enforces a weaker one is worse than none — it
+buys false confidence. Two classes recur and are easy to miss
+because the code reads as if the job is done:
+
+- **Open-set assertion claiming to "lock."** A test whose
+  docstring says "lock in the public surface" / "this can never
+  grow" but asserts with a *subset/contains* check
+  (`expected.issubset(actual)`, "x in result", "at least these
+  keys") only catches *removals*, never *additions*. A new
+  accidental export, leaked symbol, or extra field sails through.
+  Trigger: "does this assertion fail when something is *added*,
+  or only when something is *removed*?" The fix is a closed-set
+  assertion (`actual == expected`, or an explicit allowlist that
+  fails loudly with the diff). Disposition: `Simplify now` —
+  the test already exists; it just has to actually bound the set.
+- **New CI workflow that should mirror a sibling.** A workflow
+  added to guard a new codegen/drift/schema check, while a
+  sibling guard (`check-*-schema.yaml`, an existing drift job)
+  already solved the same problems — dependency caching, store
+  paths, frozen-lockfile installs, version pinning, concurrency
+  groups. The new one silently drops them. Trigger: "is there an
+  existing workflow of this shape, and does the new one match its
+  setup?" Diff the new workflow against its nearest sibling and
+  flag every step the sibling has that this one lacks — a missing
+  cache is wasted minutes every run; a missing version pin is a
+  byte-stability hole (the guard false-fails on an upstream
+  release). Disposition: `Encode as standard` — the parity itself
+  is the convention; if it recurs, a workflow template beats
+  per-file review.
+
+The unifying question for both: a guard is only as strong as the
+*tightest* thing it actually checks, not the property its name or
+docstring claims. Read the assertion, not the label.
+
 ## Language-Specific Patterns
 
 This section augments the language-agnostic process with idiomatic
@@ -555,6 +665,71 @@ Those are project-structure or release-process work, not
 code-simplification work — note the gap if it exists, but do
 not try to do all those jobs in one review.
 
+### LLM agent & prompt systems
+
+Agent orchestrators, prompt assembly, model routing, and the
+conversation transcript have their own recurring design smells.
+Each below is a *trigger signal* — a concrete code shape that
+should fire one of the design-smell lenses, so the finding
+surfaces on commit one instead of in the iteration round.
+
+- **Synthetic / injected messages that are persisted.** A
+  reminder, nudge, or system note written into the transcript as
+  a stored row (especially `role=user` with a `synthetic` meta
+  flag). Persisting it drags exactly the machinery lens 1
+  predicts: a client-visibility filter to hide it, and a
+  *provenance* bug — any code that scans history for "the last
+  user turn" (triggering-turn selection, sequence stamping) will
+  mistake the synthetic row for a real one. Trigger lens 1 +
+  lens 5; the fix is **derive-at-render-time** — recompute the
+  injection when the transcript is assembled and delete the
+  stored row.
+- **`role` chosen for provider constraints.** Reminders forced
+  to `role=user` because a mid-conversation `role=system` message
+  is rejected by the current model. Legitimate, but note it is a
+  *contingent property* (lens 4): it holds for this model
+  generation and the caveat belongs next to the code. The same
+  choice is what creates the provenance hazard above.
+- **A constraint conveyed by attachment/instruction, not
+  toolset.** "Read-only", "frozen", or "planning-only" mode
+  implemented by injecting a reminder that *asks* the model not
+  to mutate, while the mutating tools stay in the schema. This is
+  soft enforcement (lens 2): looks locked, only asked-nicely
+  locked. A mutating tool still runs if the model ignores the
+  instruction. Surface it as an explicit choice; if it must be a
+  guarantee, the gate is a per-mode toolset, not prose.
+- **"Keeps the prompt cache warm" defending a design
+  constraint.** When byte-identical prompts/tools across modes
+  are justified by cache stability, check what *else* invalidates
+  the cache on the same transition (lens 7). Anthropic prompt
+  caching is keyed per model: if the two modes route to different
+  models, the toggle turn is already a cache miss, so a per-mode
+  prompt or toolset difference on that transition costs nothing
+  extra. The constraint may still help *within* a mode (no swap),
+  but the cross-mode argument is often illusory — and it is
+  usually what foreclosed the hard tool gate above. Quantify
+  before accepting it.
+- **Config flag flipped by a mid-turn event, read from a cached
+  context value.** A mode/flag set via a `config_change` (or
+  equivalent) pending event, while a typed context field holding
+  the same value was resolved at job-start. Anything stamped from
+  the cached field before it is re-resolved records the *previous*
+  value on the turn the flag flips (lens 4). Re-resolve at the
+  read point, or stamp after the rebuild.
+- **Prompt distillation / replacement that drops dynamic
+  injections.** Replacing or shrinking a prompt (e.g. retiring a
+  specialized agent's prompt into a smaller instruction block).
+  Enumerate the *dynamic* values the old prompt injected — current
+  date, locale, user/connector context, tool inventory — and
+  confirm the new path still injects each. A dropped `current_date`
+  silently sends time-sensitive work back to the training cutoff
+  (lens 3: a property the old code guaranteed, quietly lost).
+- **The same fact in the agent_settings bag and a column.** Mode,
+  role, or feature flags stored in a JSONB/dict settings bag.
+  Trigger lens 6, and recommend the **untyped bag → typed column**
+  move: a real column with a documented legacy-fallback read
+  during migration. Indexable, typed, single-sourced.
+
 ## Rationalizations
 
 - "It works, leave it alone."
@@ -651,6 +826,22 @@ not try to do all those jobs in one review.
 - Design feedback that stops at the surface symptom instead of
   naming the pattern-class and tracing the inverse operation
   (toggle-back, delete, exit).
+- Findings that appear only after reading the iteration history,
+  bot comments, or later commits — reverse-derived from the
+  fixes and presented as if predicted. A review run with the
+  answer key is a changelog, not a review.
+- A new mode / flag / stored field reviewed without enumerating
+  its representations, its inverse, its legacy/rename path, and
+  its constraint type. The forcing enumeration was skipped.
+- A design-smell flagged ("this is persisted but derivable",
+  "this lives in the JSONB bag") with no named architectural
+  move (derive-at-render-time, untyped-bag → typed-column) to
+  resolve it. Naming the smell without naming the refactor is
+  half a review.
+- A test or guard trusted by its name/docstring rather than its
+  assertion — an open-set check (`issubset`, "x in result")
+  behind a "locks the surface" claim, or a new CI workflow that
+  drops the caching / version-pinning its sibling guard has.
 
 ## Verification
 
@@ -694,3 +885,16 @@ Before closing the review, the agent should be able to answer:
 - For any new field, mode, or stored state: is it derived where
   it could be, enforced where it claims to be, single-sourced,
   and complete on the inverse operation?
+- Were the design-smell findings produced from the first commit
+  *before* reading the iteration history or other reviewers'
+  comments — not reverse-derived from the fixes?
+- For each new mode / flag / field, was the forcing enumeration
+  run (representations, derived?, inverse, legacy/rename path,
+  same-turn ordering, constraint type)?
+- Where a smell was found, did the review name the architectural
+  move that resolves it (derive-at-render-time, untyped-bag →
+  typed-column) rather than only describing the smell?
+- For each guard, test, or CI job: does its assertion actually
+  enforce the property its name/docstring claims (closed-set, not
+  open-set), and does a new workflow match its sibling's caching
+  and version-pinning?

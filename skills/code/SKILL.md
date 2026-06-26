@@ -332,9 +332,12 @@ does not. For each lens below, the trigger question is the tool.
 6. **Single source of truth.** Is the same fact represented in
    two places that can disagree — a column and a JSONB key, a
    cache and its origin, a frontend constant and a backend
-   enum? Trigger: "if these drift, who wins, and how would we
-   notice?" Collapse to one authoritative home and derive the
-   rest. Disposition: leverage point.
+   enum? The fact need not be *data*: a version pinned in code
+   *and* in a lockfile, a dependency resolved at several call
+   sites, a constant duplicated across config and code are the
+   same smell. Trigger: "if these drift, who wins, and how would
+   we notice?" Collapse to one authoritative home and derive (or
+   resolve from) the rest. Disposition: leverage point.
 
 7. **Quantify the trade-off.** When a design choice is defended
    or attacked with "it's expensive" / "it's faster" / "it
@@ -381,6 +384,17 @@ lens above is "known":
   have to walk the diff once per question and force a yes/no on
   each new entity. The lens is a checklist to *execute*, not a
   glossary to cite after the fact.
+- **Not re-reviewing the fix.** A fix is a change, and changes
+  carry the same smells you were hunting — a fix can introduce a
+  fresh single-source violation or strand a consumer. When a
+  recommendation lands, re-run the lens on the fix itself.
+  Especially when it changes a *shared* resolution, contract, or
+  dependency — where a value comes from, what a constant resolves
+  to, which binary runs — enumerate **every** consumer of the
+  thing you touched. The classic miss is the N+1 site: you update
+  two of the three places that read it and the third now
+  disagrees. The tell that you skipped this is a fix that changes
+  how something resolves with no grep for its other call sites.
 
 **Forcing enumeration for any new mode / flag / stored field.**
 When a diff introduces a mode, flag, status, or stored field,
@@ -470,6 +484,30 @@ because the code reads as if the job is done:
 The unifying question for both: a guard is only as strong as the
 *tightest* thing it actually checks, not the property its name or
 docstring claims. Read the assertion, not the label.
+
+### Weight findings by failure mode — silent beats loud
+
+When findings outnumber what the team can act on, rank them by
+*how the failure surfaces*, not by nominal severity alone. A
+broken invariant that fails LOUD — a red CI check, a raised
+exception, a crash on next deploy — is self-announcing; someone
+will see it and fix it. One that fails SILENT — a page ships a
+stale name, a guard quietly stops guarding, a derived value
+drifts with no error — can sit in production for months. Two
+findings of equal "severity" are not equal priority if one
+screams and the other whispers.
+
+For every guard, invariant, or new field, ask: "if this breaks,
+is the failure loud or silent?" The silent one is the
+higher-leverage finding and the one most worth a hard mechanism
+(a gate, a raise, a CI check that *observes* the property). And
+when a fix converts a silent failure into a loud one — raising
+instead of returning a wrong value, a drift check that turns
+stale data into a red build — that conversion is itself a
+legitimate, often-sufficient resolution: the bug is not prevented
+but it can no longer hide. Conversely, discount a loud-only
+finding (an annoying false-fail that can never ship a wrong
+result) below any silent one.
 
 ## Language-Specific Patterns
 
@@ -842,6 +880,13 @@ surfaces on commit one instead of in the iteration round.
   assertion — an open-set check (`issubset`, "x in result")
   behind a "locks the surface" claim, or a new CI workflow that
   drops the caching / version-pinning its sibling guard has.
+- Findings ranked by nominal severity while ignoring failure
+  mode — a silent-failure smell (drift with no error, a guard
+  that stopped guarding) buried under a loud one (a red check)
+  that announces and fixes itself.
+- A fix accepted without re-running the lens on it, or that
+  changes a shared resolution / contract / dependency without
+  enumerating the other consumers — the N+1 site left to drift.
 
 ## Verification
 
@@ -898,3 +943,7 @@ Before closing the review, the agent should be able to answer:
   enforce the property its name/docstring claims (closed-set, not
   open-set), and does a new workflow match its sibling's caching
   and version-pinning?
+- For each finding, is its failure mode named (loud vs silent),
+  and are silent failures ranked above equally-severe loud ones?
+- Were the review's own fixes re-reviewed, with every consumer of
+  a changed shared resolution / contract / dependency enumerated?

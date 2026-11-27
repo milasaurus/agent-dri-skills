@@ -1,6 +1,6 @@
 ---
 name: agent-loop-governance
-description: Design the controls that let an agent loop continue, pause, stop and resume. Use when introducing repeated tool calls, unattended runs, delegated workers, or a wider scope of autonomy.
+description: Design or review controls for an agent that can take another action on its own. Use when defining or debugging correction attempts, unattended jobs, delegated work, approvals, budgets, or stop and resume behavior. Routine one-off checks and fixed retries of safe reads usually need no governance review.
 ---
 
 # Agent loop governance
@@ -11,7 +11,15 @@ A worker times out after submitting an order. Its next turn proposes submitting 
 
 ## When to use
 
-Use when deciding what a loop may do on its own and how an operator can take back control. A loop can be a single worker repeatedly calling one tool. Use [multi-agent design](../multi-agent-design/SKILL.md) if the open decision is whether to split the work. Use [agent change evaluation](../agent-change-eval/SKILL.md) to compare the quality of two versions.
+Reach for this skill when the requested decision is **what the agent may do next without asking again**. Use it before giving a system that authority, when expanding it, or when investigating a run that repeated work, exceeded a limit, or continued after cancellation. One worker is enough for any of these problems.
+
+| If the request sounds like this | Use the skill to decide |
+| --- | --- |
+| “Let the import agent fix rejected rows and try again.” | Which validation errors identify a repairable row? Can it revise just those rows? What ends the run if the same error returns? |
+| “Run triage overnight and let the agent notify customers.” | Which actions can run unattended? Who authorizes an outbound message? What happens if a restart finds a send with no receipt? |
+| “Migrate these packages in parallel and recover from failed workers.” | Which writes are independent? Who owns shared files, the combined test, and the budget for reruns? What happens to queued workers after stop? |
+
+For “check this export for missing IDs,” run the comparison directly. For a transient read error with a fixed retry policy, use the existing handler. An ambiguous write that might already have taken effect merits a governance review when designing automatic recovery. Route “should we split this into workers?” to [multi-agent design](../multi-agent-design/SKILL.md). Route “did our new repair policy improve future runs?” to [agent change evaluation](../agent-change-eval/SKILL.md).
 
 ## Process
 
@@ -24,11 +32,17 @@ Use when deciding what a loop may do on its own and how an operator can take bac
 
 ### How does an agent know what to change on its next attempt?
 
+Use automatic correction when the result can be checked, the failure tells the agent what it could change, and another attempt is authorized and worth its cost. A validator that always prescribes the same mechanical fix can call ordinary code. If a reviewer can only say “make it better,” get a concrete criterion or a human decision before spending another attempt.
+
 For a task that permits revision, have the planner name an observable acceptance check before the first attempt. Give the agent a way to run the check on the actual result and see the specific failure. For example, a report can render correctly while silently omitting records. Compare the exported IDs with the requested set and return the missing IDs to the worker. Keep the acceptance rule and expected set outside the worker's write authority.
 
 Trace three outcomes. A pass ends the task when it covers the whole request. A recoverable failure can authorize a different approach within the remaining allowance. An unavailable check, or repeated attempts with no new evidence, leaves the result unverified and triggers the run's stop or review rule. For a subjective requirement, name the person or independent reviewer whose feedback can settle it.
 
 Fixing this report demonstrates self-correction within one run. If the agent proposes saving a new export strategy for future runs, evaluate that version separately on unseen cases before promotion. For parallel work, pilot a small batch first and verify the combined result for omissions and duplicates even when every child reports success.
+
+### Who owns the result when workers run in parallel?
+
+For a proposed dynamic workflow, identify which units can run independently or which decisions would benefit from independent reviews. Preserve dependencies between steps. For example, during a package migration workers may propose isolated edits, while one coordinator owns the shared lockfile and runs the integration check. Pilot a representative slice and measure integration failures and cost per accepted package before widening the batch. Treat launching workers as a separate action with its own authorization.
 
 ## What to deliver
 
@@ -56,5 +70,7 @@ Choose **allow** for a specified scope with demonstrated controls, **limit** for
 ## Source
 
 The distinction between the working loop and the harness with authority to stop it draws on the [public introduction to Linas Beliūnas’s essay on loop governance](https://linas.substack.com/p/ai-agent-loop-governance).
+
+The [dynamic workflows overview](https://linas.substack.com/p/claude-code-dynamic-workflows-guide) introduces scripted coordination. Anthropic explains when to choose [parallel workflows](https://code.claude.com/docs/en/workflows) and when [iterative feedback improves a result](https://www.anthropic.com/research/building-effective-agents).
 
 For planning and correction from environmental feedback, see [Theo’s talk transcript](https://www.linkedin.com/posts/linasbeliunas_anthropic-research-lead-nailed-it-99-activity-7475264397532225536-m9Cc). For piloting parallel work, see [Anthropic’s guide to building loops](https://claude.com/resources/articles/getting-started-with-loops).

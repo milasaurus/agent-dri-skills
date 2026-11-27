@@ -28,6 +28,20 @@
       "prompt": "A report agent split an export of 500 requested IDs between five workers. Every worker reported success. The merged file opens and contains 500 rows, but a customer found a missing ID. The coordinator can regenerate the file and proposes saving its new batching strategy as the default. Design the next-run controls.",
       "expected_output": "Compare the final file with the independent requested ID set, including multiplicity. Feed missing or duplicated IDs back for a bounded correction and recheck the whole export. Treat an unavailable verifier as unresolved. Evaluate the proposed default on separate held-out cases before promotion.",
       "files": []
+    },
+    {
+      "id": 4,
+      "eval_name": "one-off-export-check",
+      "prompt": "I just want to check which IDs are missing from this export once. The expected IDs are A, B, C and the actual rows are A, A, C.",
+      "expected_output": "Use an ordinary comparison. Identify missing B and duplicate A. No autonomous follow-up, framework or delegated workers are needed.",
+      "files": []
+    },
+    {
+      "id": 5,
+      "eval_name": "shared-file-migration",
+      "prompt": "Our migration agent proposes a nightly job that discovers packages, lets workers patch each one, and regenerates a shared lockfile. Define what it can do unattended and how to tell whether to widen the next batch.",
+      "expected_output": "Identify independent edits and the shared lockfile dependency, give integration to one owner, pilot a representative subset, verify the combined result, and set bounded retries and stop conditions before widening. Do not start the migration.",
+      "files": []
     }
   ]
 }

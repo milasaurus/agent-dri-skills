@@ -16,6 +16,7 @@ This repo encodes that judgment as reusable skills. Each skill captures the ment
 | `code` | Staff-level code review with a simplification lens — hot spots and leverage points first, explicit dispositions per candidate | `/code-review` |
 | `eng-feasibility` | Validates load-bearing assumptions before production code — single-file spike, falsifiable gates, build/pivot/stop decision | `/eng-feasibility` |
 | `multi-agent-design` | Gates and designs multi-agent systems — forces a documented single-agent justification before any topology is selected | `/multi-agent-design` |
+| [`technical-architecture-study-guide`](skills/technical-architecture-study-guide/SKILL.md) | Draft or audit a guide that teaches a technical lead to trace one operation, diagnose a failure, and explain why the system works this way. | `/technical-architecture-study-guide` |
 
 ## Agent architecture
 

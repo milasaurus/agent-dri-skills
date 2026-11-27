@@ -26,6 +26,13 @@ This repo encodes that judgment as reusable skills. Each skill captures the ment
 | [`/agent-change-eval`](skills/agent-change-eval/SKILL.md) | Does the candidate improve the outcome of an assigned task? Compare it with the baseline on matched cases and identify the evidence needed for release. |
 | [`/agent-loop-governance`](skills/agent-loop-governance/SKILL.md) | Use when designing or debugging an agent that can retry, revise, or delegate on its own. Decide what authorizes the next action and when a person or runtime must stop it. |
 
+## Judge development
+
+| Skill | Reach for it when |
+| --- | --- |
+| [`/vlm-judge-create`](skills/vlm-judge-create/SKILL.md) | You need a vision-language model to grade images or video. Define the visual evidence and output contract, build a candidate, and measure how it agrees with human reviewers. |
+| [`/judge-tune`](skills/judge-tune/SKILL.md) | You have a judge and labeled examples. Compare one revision at a time, inspect which decisions changed, and validate the selected version before promotion. |
+
 ## Launch measurement
 
 Start with [`/launch-measurement-run`](skills/launch-measurement-run/SKILL.md) to run the chain or resume from existing artifacts. Each stage also works as a standalone command.

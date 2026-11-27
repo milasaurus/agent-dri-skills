@@ -42,6 +42,8 @@ Fixing this report demonstrates self-correction within one run. If the agent pro
 
 ### Who owns the result when workers run in parallel?
 
+When a judge can trigger another attempt, route verdicts through the controller under the run's remaining allowance. An unreadable input or judge error should lead to explicit recovery or review. Test that it cannot silently pass the result or keep the generator working indefinitely.
+
 For a proposed dynamic workflow, identify which units can run independently or which decisions would benefit from independent reviews. Preserve dependencies between steps. For example, during a package migration workers may propose isolated edits, while one coordinator owns the shared lockfile and runs the integration check. Pilot a representative slice and measure integration failures and cost per accepted package before widening the batch. Treat launching workers as a separate action with its own authorization.
 
 ## What to deliver

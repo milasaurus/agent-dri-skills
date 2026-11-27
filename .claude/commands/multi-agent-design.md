@@ -16,11 +16,9 @@ proceed / simplify first / resolve open questions / redesign disposition:
 
 2. **Apply the context engineering principles before any topology
    decision.**
-   - Principle 1: every subagent must see the orchestrator's full
-     trace of decisions and tool calls — not just the assigned
-     subtask. When the trace exceeds the context window, use a
-     compressor that preserves *decisions* (what was chosen and why),
-     not just events (what happened).
+   - Give execution workers the decisions and evidence needed for their task.
+     For an independent outcome judge, pass the brief, rubric and actual output.
+     Keep hidden labels and other reviewers' opinions outside its inputs.
    - Principle 2: parallel agents make implicit decisions
      independently. If those decisions can conflict, the combined
      output will be inconsistent regardless of individual agent
@@ -40,20 +38,16 @@ proceed / simplify first / resolve open questions / redesign disposition:
 4. **Select a topology** and justify it in two sentences over the
    primary alternative:
    - Orchestrator/workers: parallel, independent tasks, fan-out/fan-in.
-   - Pipeline: sequential, each step depends on prior full output.
+   - Pipeline: sequential, each step consumes the previous contracted output.
    - Hub and spoke: shared state multiple agents must read/write.
    - Peer-to-peer: dynamic workflows where optimal path depends on
      intermediate results (rare in production).
-   - Hierarchical: more than 10 agents with multiple independent
-     domains (add only when flat orchestrator proves insufficient).
-   Then calculate compound pipeline reliability: `p^N` where `p` is
-   per-agent reliability and `N` is the number of sequential steps.
-   If the result falls below the system's reliability requirement,
-   the topology must change.
+   - Hierarchical: add a coordinator per domain when a measured bottleneck justifies the extra handoff.
+   Estimate reliability from the actual completion rule, including required
+   parallel outputs, shared failure modes and observed recovery after retries.
+   Compare the estimate with measured end-to-end results where available.
 
-5. For each agent: name, single-sentence responsibility, model tier
-   (Opus for planning/judgment, Sonnet for reasoning over defined
-   inputs, Haiku for structured translation), tools (least-privilege),
+5. For each agent: name, single-sentence responsibility, model route verified for its inputs, error tolerance, cost and latency, tools (least-privilege),
    input, output, context window check.
 
 6. Define context contracts between each communicating pair: format

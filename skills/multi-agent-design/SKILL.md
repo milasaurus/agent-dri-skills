@@ -40,18 +40,11 @@ it's being asked to do and what decisions have already been made.
 Two principles are load-bearing. Violating either produces fragile systems
 regardless of how well the rest of the architecture is designed.
 
-**Principle 1: Share full agent traces, not just individual messages.**
+**Principle 1: Give each role the evidence it needs for its decision.**
 
-When a subagent receives only its assigned subtask — without the orchestrator's
-reasoning, tool calls, and intermediate decisions — it fills the gap with its
-own assumptions. Those assumptions will diverge from what the orchestrator
-intended. In a multi-turn conversation where the orchestrator made tool calls to
-decide how to break down the task, any detail could have consequences on how a
-subagent interprets its instructions.
+A worker implementing a change needs the request, upstream decisions, constraints and relevant tool results. An independent outcome judge needs the original brief, rubric and result as delivered. Withhold the generator's self-assessment, candidate identity, other judges' votes and hidden labels when those would reveal or bias the answer. A process audit may need tool events as evidence. Specify which events establish the property under review.
 
-The safe default: every subagent sees the full trace of everything that led to
-its task. This is expensive in tokens but the only way to ensure subagents are
-reasoning from the same ground truth.
+Try a read-only, versioned grader call before adding a stateful reviewer agent. A separate agent earns its complexity when it must gather additional evidence or requires a distinct authority boundary. The judge reports a verdict, evidence or an abstention. The controller owns retry, escalation and release. Pilot on human-labeled cases that expose shared blind spots before relying on agreement between models. For a visual reviewer, use [VLM judge creation](../vlm-judge-create/SKILL.md) to establish the evidence and grading contract.
 
 **When the full trace doesn't fit.** Raw orchestrator traces grow long and
 eventually exceed a subagent's context window. The options in order of
@@ -85,7 +78,7 @@ The result — even if both agents "succeed" — can be internally inconsistent.
 choose different visual styles. Neither fails; the combined output is broken.)
 
 The solution is not better prompting. It is either: (a) running agents
-sequentially so each sees the full trace of prior work, or (b) accepting that
+sequentially so each receives the prior decisions its role requires, or (b) accepting that
 parallel agents can only be trusted for truly independent tasks with no shared
 implicit decisions.
 
@@ -144,8 +137,7 @@ Before choosing a topology, confirm what the system is actually doing.
 
 - Write the task in one sentence: what does the system do and who does it serve?
 - State hard constraints: latency budget (total end-to-end), cost ceiling per
-  run, reliability requirement, context window limits per agent. If no
-  reliability requirement is stated, default to 95% and document the assumption.
+  run, reliability requirement, context window limits per agent. If the required reliability is unknown, identify who can set it and what failure cost would inform it.
 - List available tools and APIs.
 - Define what "done" means: is the output a single artifact, a series of
   actions, an ongoing process, or a decision?
@@ -183,7 +175,7 @@ state the specific reason explicitly:
 
 - **Provably independent parallelism**: the task has subtasks that share no
   implicit decisions and require no shared state. Each agent could be given
-  only its subtask plus the full orchestrator trace and produce a consistent
+  its subtask plus its authorized inputs and produce a consistent
   result regardless of what other agents do. This bar is high. "They work on
   different things" is not sufficient.
 - **Context window is the bottleneck and sequencing fails**: the full task
@@ -239,7 +231,7 @@ subtask without knowing about the broader workflow or each other.
 **Pipeline (sequential chain)**
 
 Agent A produces output; Agent B consumes it; Agent C consumes B's output.
-Each step depends on the previous step's full output.
+Each step receives the previous step's contracted output.
 
 - Use when: the task is naturally sequential — research → outline → draft →
   edit, or triage → knowledge retrieval → response generation.
@@ -279,19 +271,12 @@ directly without a central coordinator.
 
 **When to escalate to hierarchy**
 
-For more than 10 agents or tasks with multiple independent domains, a flat
-orchestrator becomes a bottleneck. Organize agents into small teams (3–5 agents)
-each with a local coordinator, and have coordinators report to a top-level
-orchestrator. Clear escalation paths, local optimization within teams, global
-coherence across teams. Add hierarchy only after the flat topology proves
-insufficient — not as a default.
+Consider a coordinator per domain when a flat coordinator demonstrably bottlenecks dispatch, context or integration. Record the observed limit and the cost of an extra handoff before adding hierarchy.
 
 Select one topology and write two sentences justifying it over the primary
 alternative. If you cannot write that justification, the topology is not yet decided.
 
-**Calculate compound pipeline reliability before committing.** Each agent in a
-sequential chain multiplies failure probability. If each agent has reliability
-`p` and there are `N` agents in sequence, pipeline reliability is `p^N`:
+**Estimate end-to-end reliability from the completion rule.** When all N stages must succeed, multiply their conditional success rates given that earlier stages succeeded. If their successes are independent and each has the same probability `p`, this simplifies to `p^N`. The table illustrates that assumption.
 
 | Agents | Per-agent reliability | Pipeline reliability |
 |--------|----------------------|----------------------|
@@ -307,20 +292,9 @@ the pipeline must be shorter, per-agent reliability must be higher, or the desig
 needs a different topology. Do this math before the ADR is written, not after the
 pipeline is built.
 
-For orchestrator/worker topologies, compound reliability applies to the critical
-path through the workflow (the longest sequential chain), not across all workers.
-Workers that run in parallel do not multiply failure probability — but a single
-worker failure still affects the final output unless the orchestrator has an
-explicit degradation path.
+For parallel workers, distinguish latency from correctness. If all five outputs are required, five independent workers at 95% reliability deliver a complete result about 77% of the time, whether they run together or in sequence. For partial delivery or voting, define the acceptance rule and measure it on representative runs. Workers and judges using the same model or missing the same input can fail together.
 
-**Retry adjusts effective reliability.** If each agent has base reliability `p`
-and you add one automatic retry on failure, effective per-agent reliability
-becomes `1 - (1-p)²`. At 95% base reliability, one retry yields 99.75% effective
-reliability — which changes a 5-agent pipeline from 77% to 99% end-to-end. When
-retry is in the design, use the adjusted number in the table, not the base
-reliability. If retry is prompt-only (the model decides whether to retry) rather
-than code-enforced, use the base number — prompt-only retry is not a reliability
-guarantee.
+A retry contributes `P(first fails) × P(retry succeeds | first failed)` to eventual success when failure is detected and replay is safe. Estimate recovery from failed cases. A retry of the same judge on an unreadable screenshot adds no visual evidence.
 
 ### 4. Define agent boundaries
 
@@ -338,31 +312,7 @@ For each agent in the topology, specify:
 - **Context window check** — estimate the maximum input size. Confirm it fits.
   If it doesn't, this is the topology's first bottleneck.
 
-**Model tier selection.** For each agent, pick the weakest model that reliably
-handles the task. Stronger models cost more and add latency; don't use them
-where they're not needed. The tiers below are mapped to Anthropic's current
-model names (Opus / Sonnet / Haiku) — verify the mapping against current model
-cards when invoking this skill, as names and capability boundaries shift between
-generations.
-
-- **Opus** — multi-step planning, ambiguous judgment calls, synthesis across many
-  inputs with no clear right answer, orchestrators managing complex workflows.
-  Use when the agent must decide *what to do*, not just *how to do it*.
-- **Sonnet** — solid reasoning over well-defined inputs, most worker agents with
-  clear tasks and concrete context. Use when the task requires reasoning but the
-  inputs and expected output format are specified.
-- **Haiku** — structured translation with explicit schemas: date parsing, format
-  conversion, extraction from structured inputs, classification with well-defined
-  categories. Rule of thumb: if the task could theoretically be done with a
-  template or a regex, it's a Haiku task. If it requires judgment, it isn't.
-  Tasks that sound routine but require situational judgment — tone selection,
-  professional register, ambiguity resolution — are Sonnet tasks, not Haiku.
-  When unsure, treat as Sonnet and validate down empirically; don't assert Haiku
-  without testing it at the task.
-
-If you're unsure between tiers, start with Sonnet and downgrade to Haiku after
-testing. Upgrading from Haiku to Sonnet mid-build is cheaper than retrofitting
-Opus reasoning into a pipeline designed around Haiku latency assumptions.
+**Model selection.** Specify the role’s required input modalities, evidence resolution, tool and output contracts, latency, cost and tolerated errors. Use deterministic code for exact transformations. For judgment, compare available routes on representative cases, including a failure the caller cannot afford to accept. Select a route that clears the quality bar within budget. Record the tested version and evidence. A generator and reviewer using different model names can still share the same blind spot.
 
 ### 5. Define context contracts
 
@@ -510,12 +460,7 @@ insufficient, not before.
     ship.
 
 - "Each subagent gets the task description — that's enough context."
-  - Rebuttal: the task description is not the context. The context is everything
-    the orchestrator has done, decided, and discovered on the way to assigning
-    the subtask — the tool calls, the intermediate reasoning, the implicit
-    choices. A subagent that only sees the task description resolves all those
-    implicit decisions independently, and its resolutions will diverge from the
-    orchestrator's intent and from other subagents' resolutions.
+  - Rebuttal: give execution workers the prior decisions and evidence they depend on. Give independent reviewers the rubric and authorized evidence their check requires. Record the input contract for each.
 
 - "Parallel agents speed things up — that's worth the tradeoff."
   - Rebuttal: parallel agents are only safe when their tasks are truly
@@ -523,8 +468,7 @@ insufficient, not before.
     tasks have layers of nuance where one agent's choices constrain another's.
     The speed gain disappears when you have to reconcile inconsistent outputs.
     If parallelism is the goal, first prove the subtasks are genuinely
-    independent; then validate that each agent can receive the full orchestrator
-    trace and still fit in the context window.
+    independent; then validate that each role’s required evidence fits its context window.
 
 - "Peer-to-peer is more flexible."
   - Rebuttal: flexibility in coordination means loss of traceability. Peer-to-peer
@@ -569,8 +513,7 @@ insufficient, not before.
   constrain another's. The team has not confirmed the subtasks are genuinely
   independent (no shared state, no shared implicit decisions). This is a
   Principle 2 violation.
-- Subagents receive only their assigned subtask without the orchestrator's full
-  trace of decisions and tool calls. This is a Principle 1 violation.
+- A worker lacks evidence needed for its task, or an independent judge receives hidden labels or earlier votes. Both violate the role's context contract.
 - The design chose multi-agent for specialization — a focused system prompt and
   tool list achieves the same specialization in a single agent without the
   context-sharing problem.
@@ -622,8 +565,7 @@ Before closing, the agent should be able to answer:
   the boundary must be collapsed.
 - Is a single topology named, justified over the primary alternative, and
   matched to the task's dependency structure?
-- Has compound pipeline reliability been calculated (`p^N`)? Does the result
-  meet the system's reliability requirement?
+- Does the reliability estimate use the actual completion rule and account for correlated failures and retries? What end-to-end observation tests the estimate?
 - Does each agent have a one-sentence responsibility, a model tier (with
   justification), a tool list, and defined input and output?
 - Is the context contract for each inter-agent message defined — format,

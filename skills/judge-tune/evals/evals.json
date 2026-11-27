@@ -1,0 +1,19 @@
+{
+  "skill_name": "judge-tune",
+  "evals": [
+    {
+      "id": 0,
+      "eval_name": "skewed-labels",
+      "prompt": "Our ticket-routing judge approves 98% of examples and matches humans 96% of the time. We have labels and notes, an existing prompt, and a fixed tuning budget. Decide how to improve it. Draft only.",
+      "expected_output": "Inspect class counts, false accepts and false rejects against the labeled baseline. Propose one evidence-linked prompt change and risks to correct cases. Report a preview for review, reserve untouched validation, and do not execute or register.",
+      "files": []
+    },
+    {
+      "id": 1,
+      "eval_name": "mixed-settings-and-leakage",
+      "prompt": "We changed both the model and prompt of a visual judge. Accuracy went from 84 to 87 on different crops. Six final-set misses were shown to the tuner and informed the new prompt. Can we register this as a validated improvement?",
+      "expected_output": "Treat the difference as confounded. Restore matched inputs and frozen preprocessing, vary one factor from the best supported baseline, account for rerun noise and new errors. Retire the exposed holdout for promotion and require independent evidence and authorization.",
+      "files": []
+    }
+  ]
+}

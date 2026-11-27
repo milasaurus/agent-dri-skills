@@ -1,0 +1,19 @@
+{
+  "skill_name": "vlm-judge-create",
+  "evals": [
+    {
+      "id": 0,
+      "eval_name": "pairwise-instruction-diagrams",
+      "prompt": "We need a visual grader to choose which assembly diagram follows a reference. Sets of diagrams have small socket markers and multiple revisions of the same drawing. Build a first candidate and decide what evidence it needs before use.",
+      "expected_output": "Define the reference and candidate ordering, blind identity, validate effective resolution and order-swapped decisions, split by drawing family, return a schema and criterion for ties or insufficient evidence. Distinguish runnable candidate and validated judge.",
+      "files": []
+    },
+    {
+      "id": 1,
+      "eval_name": "video-continuity",
+      "prompt": "A team wants a judge to list every interval where the on-screen subtitle covers the diagram in a training video. We have labeled intervals for 12 clips and the runner currently sends the first frame only. Can this ship?",
+      "expected_output": "Hold the temporal claim, define sampling or segment coverage, timestamp and interval matching with one-to-one assignment. Report precision and recall plus uncovered footage and held-out clip-level evidence. Avoid scalar kappa for lists.",
+      "files": []
+    }
+  ]
+}

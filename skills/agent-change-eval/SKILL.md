@@ -31,6 +31,8 @@ Restore both versions to the same decision point, including the state visible th
 
 ### Before a grader decides a release
 
+If the change under test is an agent, pin the judge across both arms. Use [VLM judge creation](../vlm-judge-create/SKILL.md) for a new visual rubric or [judge tuning](../judge-tune/SKILL.md) when the grader itself is the candidate. If the grader changes mid-comparison, rescore both saved outputs with the same validated version before attributing a difference to the agent.
+
 For a judgment call, get independent labels from people who use or review the result. Tune the rubric on one set, then check grader agreement on held-out examples, including consequential misses. Record the rubric and grader versions, number of labeled examples, and disagreements that could reverse the decision. If the grader routinely accepts a failure the domain reviewers reject, keep that criterion under human review. In the readout, show whether the paired change is distinguishable from ordinary baseline variation as well as large enough to matter.
 
 ## Common rationalizations

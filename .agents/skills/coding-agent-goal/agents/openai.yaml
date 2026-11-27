@@ -1,0 +1,6 @@
+interface:
+  display_name: "Coding Agent Goal"
+  short_description: "Draft a coding-agent handoff with verifiable PR completion gates"
+  default_prompt: "Use $coding-agent-goal to author the operating contract and task goal for this change."
+policy:
+  allow_implicit_invocation: false

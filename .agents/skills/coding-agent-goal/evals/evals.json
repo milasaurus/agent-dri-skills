@@ -1,0 +1,26 @@
+{
+  "skill_name": "coding-agent-goal",
+  "evals": [
+    {
+      "id": 0,
+      "eval_name": "default-two-part",
+      "prompt": "/coding-agent-goal Plan U1 adds dotted keys to the config parser. Existing literal keys win on conflict. The repo uses pytest tests/test_config.py. Write a goal in chat.",
+      "expected_output": "Provide the contract and fresh task goal, preserve U1 and precedence, specify collision and legacy cases, and include verifiable CI and review gates. Author documents only.",
+      "files": []
+    },
+    {
+      "id": 1,
+      "eval_name": "contract-only",
+      "prompt": "/coding-agent-goal contract-only",
+      "expected_output": "Return only the complete reusable contract, including paginated reviews, pending CI, authority limits and completion at an addressed PR. No repo or plan is required.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "eval_name": "task-only",
+      "prompt": "/coding-agent-goal task-only PR 41 adds a --json option to a local CLI. tests/test_output.py covers the current default, run with python -m pytest tests/test_output.py. Return the task part in chat.",
+      "expected_output": "Produce only the goal. Preserve normal output and cover JSON mode with the supplied test entry point. Include current-head CI and review commands, use the existing PR, and leave merging to the maintainer.",
+      "files": []
+    }
+  ]
+}

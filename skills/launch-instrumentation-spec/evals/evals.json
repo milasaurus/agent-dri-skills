@@ -1,0 +1,12 @@
+{
+  "skill_name": "launch-instrumentation-spec",
+  "evals": [
+    {
+      "id": 0,
+      "eval_name": "warehouse-field-missing",
+      "prompt": "Gold export metrics have no picker source. Raw successful-export rows include request_id, team_id and picker_source. The client event fires on each render. What logging should engineers add?",
+      "expected_output": "Identify a modeled-data gap; propose joining or projecting the raw field and checking uniqueness/coverage. Avoid a redundant writer or a render-based completion count.",
+      "files": []
+    }
+  ]
+}

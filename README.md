@@ -17,6 +17,18 @@ This repo encodes that judgment as reusable skills. Each skill captures the ment
 | `eng-feasibility` | Validates load-bearing assumptions before production code — single-file spike, falsifiable gates, build/pivot/stop decision | `/eng-feasibility` |
 | `multi-agent-design` | Gates and designs multi-agent systems — forces a documented single-agent justification before any topology is selected | `/multi-agent-design` |
 
+## Launch measurement
+
+Start with [`/launch-measurement-run`](skills/launch-measurement-run/SKILL.md) to run the chain or resume from existing artifacts. Each stage also works as a standalone command.
+
+| Stage | Deliverable |
+| --- | --- |
+| [`/launch-measurement-plan`](skills/launch-measurement-plan/SKILL.md) | Decision, metric definitions, denominators and guardrails |
+| [`/launch-instrumentation-spec`](skills/launch-instrumentation-spec/SKILL.md) | Verified signal map and gaps by metric |
+| [`/launch-eng-handoff`](skills/launch-eng-handoff/SKILL.md) | Implementation asks with owners and acceptance checks |
+| [`/launch-logging-audit`](skills/launch-logging-audit/SKILL.md) | Post-deployment evidence and coverage limits |
+| [`/launch-dashboard-metrics`](skills/launch-dashboard-metrics/SKILL.md) | Dashboard or build specification with validation status |
+
 ## Secondary skills
 
 | Skill | Source | What it does |

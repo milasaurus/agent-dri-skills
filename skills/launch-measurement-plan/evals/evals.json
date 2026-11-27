@@ -1,0 +1,12 @@
+{
+  "skill_name": "launch-measurement-plan",
+  "evals": [
+    {
+      "id": 0,
+      "eval_name": "staged-rollout",
+      "prompt": "A new export flow is rolling out by region. Product wants to know whether teams finish more exports or just switch from the old flow. Define metrics only. No randomized holdout exists.",
+      "expected_output": "Define adoption and total successful external-team exports across both flows, including a substitution measure, window and eligible unit. Label regional trends descriptive and state what comparison a lift claim would require.",
+      "files": []
+    }
+  ]
+}

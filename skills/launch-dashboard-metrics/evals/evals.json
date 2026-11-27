@@ -1,0 +1,12 @@
+{
+  "skill_name": "launch-dashboard-metrics",
+  "evals": [
+    {
+      "id": 0,
+      "eval_name": "immature-retention-panel",
+      "prompt": "Design a dashboard from this audit: 8 eligible external teams, 5 reached their full seven-day observation window, 2 of those 5 repeated. A second surface has no usable repeat signal. You cannot render or publish here.",
+      "expected_output": "Specify 2/5 for the observed mature group, 3 immature teams separately, and unavailable for the second surface. Provide a filter/parity check and leave rendered verification pending.",
+      "files": []
+    }
+  ]
+}

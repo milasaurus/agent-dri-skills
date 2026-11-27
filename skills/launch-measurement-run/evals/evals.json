@@ -1,0 +1,12 @@
+{
+  "skill_name": "launch-measurement-run",
+  "evals": [
+    {
+      "id": 0,
+      "eval_name": "resume-before-traffic",
+      "prompt": "Resume our launch measurement chain. The plan and signal map are approved. A comparable feature on the same write path has 100% fill; this feature has no eligible traffic. The writer merged yesterday. Draft the launch dashboard and tell me what is open.",
+      "expected_output": "Reuse the plan and map; record deployment/traffic verification as pending. Carry the proxy and its limits into a draft without publishing it or calling the audit verified.",
+      "files": []
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "skill_name": "launch-logging-audit",
+  "evals": [
+    {
+      "id": 0,
+      "eval_name": "equal-totals-wrong-set",
+      "prompt": "Audit a deployed event over a settled window. Server completed request IDs A,B,C. Warehouse completion rows A,A,C. The rollout is active for all three requests. The ticket is closed.",
+      "expected_output": "Report the missing B and duplicate A despite equal raw totals. Withhold verification, report 2/3 distinct request coverage and require a producer-to-warehouse trace before assigning the fix.",
+      "files": []
+    }
+  ]
+}

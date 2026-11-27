@@ -36,6 +36,14 @@ Start with [`/launch-measurement-run`](skills/launch-measurement-run/SKILL.md) t
 | [`/launch-logging-audit`](skills/launch-logging-audit/SKILL.md) | Post-deployment evidence and coverage limits |
 | [`/launch-dashboard-metrics`](skills/launch-dashboard-metrics/SKILL.md) | Dashboard or build specification with validation status |
 
+## Experimentation
+
+| Skill | What it does | Reach for it when |
+| --- | --- | --- |
+| [`/experiment-design`](skills/experiment-design/SKILL.md) | Trace the product flow, choose an A/B test or rollout, check overlap with live tests, size it, and fill the tracker and pre-launch gate. | Before building an experiment. |
+| [`/experiment-pr-check`](skills/experiment-pr-check/SKILL.md) | Check the primary metric, treatment delivery and identity mapping first. Then compare the full setup PR with its tracker row and give separate merge and exposure decisions. | When a PR wires up an experiment, before merge or exposure. |
+| [`/experiment-readout`](skills/experiment-readout/SKILL.md) | Check whether the results are interpretable and publish one action with the evidence, owner and timing. | At a planned decision point or when a stop condition is met. |
+
 ## Secondary skills
 
 | Skill | Source | What it does |

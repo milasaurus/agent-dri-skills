@@ -6,7 +6,7 @@ Staff-level engineering judgment encoded as skills for AI agents. See `README.md
 
 - Design every skill around a decision or contract that transfers across projects. Derive the workflow, evidence, and tools from the caller's architecture. Keep domain examples illustrative and self-contained; for broadly applicable skills, exercise materially different settings in the evals.
 - Every skill lives in `skills/<name>/SKILL.md` with YAML frontmatter (`name`, `description`).
-  The manual-only `coding-agent-goal` guide lives in `.agents/skills/` for Codex. Its Claude plugin and project command entries set `disable-model-invocation`. Keep that guide outside the plugin's auto-discovered `skills/` directory, and include it when validating the catalog.
+  The shared `coding-agent-goal` guide lives in `.agents/skills/` for Codex discovery. Its Claude plugin and project command entries load that same guide. Include it when validating the catalog.
 - Description starts with what the skill does, then trigger conditions ("Use when…").
 - Every SKILL.md contains: Why this skill / When to use / Process / Common rationalizations / Red flags / **Dispositions**. The disposition framework is non-negotiable — see Boundaries.
 - Slash commands live in `.claude/commands/<name>.md` and map 1:1 to skills.

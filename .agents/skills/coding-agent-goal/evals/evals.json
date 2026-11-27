@@ -21,6 +21,20 @@
       "prompt": "/coding-agent-goal task-only PR 41 adds a --json option to a local CLI. tests/test_output.py covers the current default, run with python -m pytest tests/test_output.py. Return the task part in chat.",
       "expected_output": "Produce only the goal. Preserve normal output and cover JSON mode with the supplied test entry point. Include current-head CI and review commands, use the existing PR, and leave merging to the maintainer.",
       "files": []
+    },
+    {
+      "id": 3,
+      "eval_name": "resume-existing-pr",
+      "prompt": "We are partway through PR 41. U1 is done, but the requester clarified that U2 must also preserve output for empty input. The current goal omits that acceptance case. Another worker is taking over.",
+      "expected_output": "Refresh the existing task section with the new acceptance case and its evidence, preserve U1 and the existing PR, and hand back U2. Do not regenerate the contract or start another run.",
+      "files": []
+    },
+    {
+      "id": 4,
+      "eval_name": "ordinary-ci-failure",
+      "prompt": "U2 already requires the empty-input regression test. It failed on PR 41 and its log points to the missing guard. Keep going.",
+      "expected_output": "Follow the existing goal and fix and rerun the failed test within the active loop. Skip goal authoring and preserve the acceptance test.",
+      "files": []
     }
   ]
 }

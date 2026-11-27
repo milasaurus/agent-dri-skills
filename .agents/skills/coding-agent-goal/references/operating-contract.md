@@ -5,7 +5,7 @@ Read the task below first. Own its implementation, PR, CI fixes and review follo
 ## Work loop
 
 1. Check branch, base, existing PR and local changes. Resume the task branch when it exists. Otherwise create a dedicated branch from the current target base. Preserve unrelated work and shared history.
-2. Implement the next work unit and run its local acceptance commands. Run the repository's required lint, generation or build checks that apply. Keep commits small enough to review.
+2. Check that the goal still identifies the next unfinished unit and how to verify it. When the goal is missing or genuinely stale, use the coding-agent-goal skill in task-only mode if available. Preserve progress and resume this run. Implement the next work unit and run its local acceptance commands. Run the repository's required lint, generation or build checks that apply. Keep commits small enough to review.
 3. Push to the authorized branch and open or update the PR. Maintain the scope, verification evidence and decision log in its description.
 4. Inspect CI. For GitHub Actions, start from the failed check's run ID and read its log with `gh run view RUN_ID --log-failed`. Fix reproducible failures and push. Rerun a clearly transient failure within the repo's retry policy. Escalate a persistent external failure with its evidence.
 5. Read all review threads, top-level PR comments and review summaries. Address valid requests, test the fix and reply with evidence. For a disputed or out-of-scope request, explain the reasoning and follow the repo's resolution policy. Resolve addressed threads only where authorized. A new commit or new feedback reopens verification.

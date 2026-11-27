@@ -1,6 +1,6 @@
 ---
 name: coding-agent-goal
-description: Write a two-part coding-agent handoff for implementing a change and driving its pull request through CI and review. Invoke explicitly with a plan path, PR, ticket, or description. Supports contract-only and task-only.
+description: Write or revise a coding-agent goal for implementation, CI, and PR review. Use when asked for a handoff or when an active coding loop lacks a usable goal, needs a clarified acceptance check, or must hand unfinished work to another agent. Routine CI and review iterations follow the current goal.
 ---
 
 # Coding agent goal
@@ -11,7 +11,11 @@ description: Write a two-part coding-agent handoff for implementing a change and
 
 ## When to use
 
-Use on explicit invocation to **author the handoff**. Implementation, PR creation and CI monitoring are instructions for the agent that later receives the goal. Team goals and quarterly milestones belong in the team's planning workflow.
+Invoke directly with a plan, PR, ticket, or description. An agent may also select this skill during an authorized coding loop when the next worker cannot tell what remains or how to prove completion. Typical triggers are a missing goal, a new in-scope requirement from the requester, or a handoff where the current goal is stale. Team and quarterly goals belong in the planning workflow.
+
+**Inside a loop, use task-only by default.** Read the current goal and the evidence that made it inadequate. Update the existing task document in place when available. Carry forward the branch, PR, completed units, decisions, constraints, and outstanding checks. Return control to the running loop at the next unfinished unit. A failing test with a known expected result calls for a fix; a pending check calls for a wait. Neither warrants rewriting the goal.
+
+A goal revision inherits the user's scope and authority. Preserve acceptance criteria unless the requester changes them or a grounded clarification preserves their intent. A red check is never grounds for weakening the definition of done. An explicit authoring request ends with the document; it does not start a new implementation run.
 
 ## Process
 

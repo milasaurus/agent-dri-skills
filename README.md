@@ -17,7 +17,7 @@ This repo encodes that judgment as reusable skills. Each skill captures the ment
 | `eng-feasibility` | Validates load-bearing assumptions before production code — single-file spike, falsifiable gates, build/pivot/stop decision | `/eng-feasibility` |
 | `multi-agent-design` | Gates and designs multi-agent systems — forces a documented single-agent justification before any topology is selected | `/multi-agent-design` |
 | [`technical-architecture-study-guide`](skills/technical-architecture-study-guide/SKILL.md) | Draft or audit a guide that teaches a technical lead to trace one operation, diagnose a failure, and explain why the system works this way. | `/technical-architecture-study-guide` |
-| [`coding-agent-goal`](.agents/skills/coding-agent-goal/SKILL.md) | Write the operating contract and task goal a coding agent can use to drive a PR through CI and review. Accepts a plan, PR, ticket, or description. | `/coding-agent-goal` (manual only) |
+| [`coding-agent-goal`](.agents/skills/coding-agent-goal/SKILL.md) | Write a coding-agent handoff, or refresh a stale task goal during a running PR loop. | `/coding-agent-goal` |
 
 Use `contract-only` for the reusable rules or `task-only` for a fresh goal. When installed as a Claude Code plugin, use `/agent-dri-skills:coding-agent-goal`.
 

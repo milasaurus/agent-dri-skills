@@ -1,0 +1,33 @@
+{
+  "skill_name": "multi-agent-design",
+  "evals": [
+    {
+      "id": 0,
+      "eval_name": "shared-editor",
+      "prompt": "Our calendar agent can already sort sessions. We want it to identify themes and rearrange selected sessions while several schedulers edit the same agenda. Design the boundary. One write timed out after submission.",
+      "expected_output": "Distinguish direct sort from a potentially justified scoped child loop, enforce identity and authority at runtime, protect neighboring records, reconcile unknown writes, verify per-item outcomes and evaluate grouping independently.",
+      "files": []
+    },
+    {
+      "id": 1,
+      "eval_name": "superseded-workers",
+      "prompt": "Two independently retryable producers feed a review queue. The reviewer can choose one early, revise one item, or ask for both. A worker finishes after its parent restarts and another returns after a revision. Review our topology.",
+      "expected_output": "Separate execution and result acceptance, specify each join rule, pin revision and child identity, recover terminal results for the right parent, fence stale publication and account for losing workers and retries.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "eval_name": "simple-role-split",
+      "prompt": "Build a researcher, writer and critic for a read-only answer from a single short, authoritative refund policy. It fits the current context and we have no evidence the current agent falls short.",
+      "expected_output": "Recommend a single-agent baseline, retrieval and citations. Consider a read-only grader if needed, identify evidence that could justify an additional runtime boundary.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "eval_name": "nested-approvals",
+      "prompt": "An invoice assistant delegates reconciliation to a child which can request a vendor credit. The parent is cancelled while approval is outstanding. A retried launch has the same ID and a different amount. What may run?",
+      "expected_output": "Bind authority and approval to the actual actor, scope and operation, reject mismatched retry, recheck cancellation, distinguish ambiguous external effects, preserve other approvals and return an evidence-backed outcome.",
+      "files": []
+    }
+  ]
+}

@@ -1,14 +1,14 @@
 ---
 name: system-design-review
-description: Review a proposed system design from a staff-level architectural lens, anchoring recommendations in reliability, maintainability, scalability, availability, latency, and operability.
-trigger:
-  - "A design proposal is ready for review."
-  - "A team requests architecture-level feedback on a system."
-archetypes:
-  - architect
-  - staff-reviewer
-  - tech-lead
+description: Review a proposed system design from a staff-level architectural lens, anchoring recommendations in reliability, maintainability, scalability, availability, latency, and operability. Use when a team requests architectural feedback on a design proposal.
 ---
+
+## Example requests
+
+- A design proposal is ready for review.
+- A team requests architecture-level feedback on a system.
+
+Review roles: architect, staff-reviewer, tech-lead.
 
 ## Overview
 

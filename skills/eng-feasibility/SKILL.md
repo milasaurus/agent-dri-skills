@@ -1,14 +1,15 @@
 ---
 name: eng-feasibility
-description: Build a focused spike to validate a project's load-bearing assumptions before committing to a build. Lists the assumptions that would kill the project if false, defines falsifiable go/no-go gates for each, and turns the spike's findings into a build / pivot-architecture / pivot-narrative / stop decision.
-trigger:
-  - "A new project, prototype, or feature has uncertain technical foundations and a build is about to start."
-  - "An engineer is about to commit to a multi-week effort but hasn't tested the core hypothesis end-to-end."
-  - "A team wants to know whether a project's assumptions hold before investing in production infrastructure."
-archetypes:
-  - tech-lead
-  - staff-eng
+description: Build a focused spike to validate a project's load-bearing assumptions before committing to a build. Lists the assumptions that would kill the project if false, defines falsifiable go/no-go gates for each, and turns the spike's findings into a build / pivot-architecture / pivot-narrative / stop decision. Use before a build depends on an untested technical assumption.
 ---
+
+## Example requests
+
+- A new project, prototype, or feature has uncertain technical foundations and a build is about to start.
+- An engineer is about to commit to a multi-week effort but hasn't tested the core hypothesis end-to-end.
+- A team wants to know whether a project's assumptions hold before investing in production infrastructure.
+
+Review roles: tech-lead, staff-eng.
 
 ## Overview
 

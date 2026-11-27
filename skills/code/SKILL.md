@@ -1,17 +1,16 @@
 ---
 name: code
-description: Staff-level code review with two lenses — a simplification lens (when to clean up code that works) and a design-smell lens (correctness and architecture issues a cleanup pass misses — persisted-vs-derived state, soft-vs-hard enforcement, drifted invariants, contingent properties, single-source-of-truth violations). Prioritizes hot spots, leverage points, and alignment with the codebase's direction. Produces a clear disposition per candidate — simplify now, with conditions, encode as standard, leave it, defer, or needs more context.
-trigger:
-  - "A pull request or branch is ready for a staff-level code review."
-  - "A team asks whether code that works is also clean enough to maintain."
-  - "An engineer flags accumulated complexity and asks where to invest first."
-  - "A change introduces a new field, mode, flag, or stored state and you want the design reviewed, not just the style."
-archetypes:
-  - staff-reviewer
-  - tech-lead
-  - reviewer
-  - design-reviewer
+description: Staff-level code review with two lenses — a simplification lens (when to clean up code that works) and a design-smell lens (correctness and architecture issues a cleanup pass misses — persisted-vs-derived state, soft-vs-hard enforcement, drifted invariants, contingent properties, single-source-of-truth violations). Prioritizes hot spots, leverage points, and alignment with the codebase's direction. Produces a clear disposition per candidate — simplify now, with conditions, encode as standard, leave it, defer, or needs more context. Use when reviewing a PR, branch, or a maintenance hotspot.
 ---
+
+## Example requests
+
+- A pull request or branch is ready for a staff-level code review.
+- A team asks whether code that works is also clean enough to maintain.
+- An engineer flags accumulated complexity and asks where to invest first.
+- A change introduces a new field, mode, flag, or stored state and you want the design reviewed, not just the style.
+
+Review roles: staff-reviewer, tech-lead, reviewer, design-reviewer.
 
 ## Overview
 

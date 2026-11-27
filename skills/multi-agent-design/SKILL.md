@@ -1,18 +1,18 @@
 ---
 name: multi-agent-design
 description: Gate and design multi-agent systems. Invoke whenever an architecture decision is being made where multi-agent might be the answer — the skill's primary value is forcing a documented single-agent justification before any topology is selected.
-trigger:
-  - "I need to build an agent that does X, Y, and Z — where X, Y, Z sound like separate roles."
-  - "How should I architect this agentic system?"
-  - "I want a researcher agent, a writer agent, and a fact-checker agent."
-  - "How should I set up the orchestrator and worker agents for this?"
-  - "Can you review this multi-agent design?"
-  - "I need an ADR for this agentic workflow."
-archetypes:
-  - architect
-  - tech-lead
-  - staff-eng
 ---
+
+## Example requests
+
+- I need to build an agent that does X, Y, and Z — where X, Y, Z sound like separate roles.
+- How should I architect this agentic system?
+- I want a researcher agent, a writer agent, and a fact-checker agent.
+- How should I set up the orchestrator and worker agents for this?
+- Can you review this multi-agent design?
+- I need an ADR for this agentic workflow.
+
+Review roles: architect, tech-lead, staff-eng.
 
 ## Overview
 

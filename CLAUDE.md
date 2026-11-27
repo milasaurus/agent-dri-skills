@@ -4,6 +4,7 @@ Staff-level engineering judgment encoded as skills for AI agents. See `README.md
 
 ## Conventions
 
+- Design every skill around a decision or contract that transfers across projects. Derive the workflow, evidence, and tools from the caller's architecture. Keep domain examples illustrative and self-contained; for broadly applicable skills, exercise materially different settings in the evals.
 - Every skill lives in `skills/<name>/SKILL.md` with YAML frontmatter (`name`, `description`).
 - Description starts with what the skill does, then trigger conditions ("Use when…").
 - Every SKILL.md contains: Why this skill / When to use / Process / Common rationalizations / Red flags / **Dispositions**. The disposition framework is non-negotiable — see Boundaries.

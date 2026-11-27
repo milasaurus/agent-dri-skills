@@ -1,0 +1,19 @@
+{
+  "skill_name": "experiment-pr-check",
+  "evals": [
+    {
+      "id": 0,
+      "eval_name": "dormant-worker-flag",
+      "prompt": "Tracker assigns the search ranker by account and defines searches with an accepted result per eligible account over seven days. The PR adds a default-off flag, evaluated per account. Both worker branches still call rank_v1. The dashboard's primary is acceptance among clicked results. Clicks carry a request ID and we have no request-account mapping. Review for merge and exposure.",
+      "expected_output": "Lead with the primary mismatch, absent treatment path and missing identity mapping. Fill the comparison table, request evidence on real assignment and outcome joins, and separate whether a dormant change can merge from whether it can expose.",
+      "files": []
+    },
+    {
+      "id": 1,
+      "eval_name": "shared-inbox-valid-mapping",
+      "prompt": "Our tracker assigns a shared mailbox to a triage rule, split equally. Outcome is mailboxes with at least one resolved ticket within three days per assigned mailbox. Both deployed paths have fixture traces and matching labels. Ticket events carry ticket IDs with immutable creation-time mailbox links. The query starts from assignments and left joins deduplicated resolutions. The full gate, including rollback and coverage checks, passed in staging. Production config is still awaiting confirmation. Review the PR.",
+      "expected_output": "Accept the explicit key mapping and denominator. Verify delivery and primary against the design, distinguish staging evidence from production configuration, and identify what could merge and what is needed before live exposure.",
+      "files": []
+    }
+  ]
+}

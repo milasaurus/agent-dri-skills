@@ -1,14 +1,15 @@
 ---
 name: eng-feasibility
-description: Build a focused spike to validate a project's load-bearing assumptions before committing to a build. Lists the assumptions that would kill the project if false, defines falsifiable go/no-go gates for each, and turns the spike's findings into a build / pivot-architecture / pivot-narrative / stop decision.
-trigger:
-  - "A new project, prototype, or feature has uncertain technical foundations and a build is about to start."
-  - "An engineer is about to commit to a multi-week effort but hasn't tested the core hypothesis end-to-end."
-  - "A team wants to know whether a project's assumptions hold before investing in production infrastructure."
-archetypes:
-  - tech-lead
-  - staff-eng
+description: Build a focused spike to validate a project's load-bearing assumptions before committing to a build. Lists the assumptions that would kill the project if false, defines falsifiable go/no-go gates for each, and turns the spike's findings into a build / pivot-architecture / pivot-narrative / stop decision. Use before a build depends on an untested technical assumption.
 ---
+
+## Example requests
+
+- A new project, prototype, or feature has uncertain technical foundations and a build is about to start.
+- An engineer is about to commit to a multi-week effort but hasn't tested the core hypothesis end-to-end.
+- A team wants to know whether a project's assumptions hold before investing in production infrastructure.
+
+Review roles: tech-lead, staff-eng.
 
 ## Overview
 
@@ -124,12 +125,6 @@ Do not use when:
      to the user in flat text — missing inputs, ambiguous
      branches, and state that has to be remembered between
      calls all surface here, when they are still cheap.
-   - Canonical reference: image-morpher `spike/spike.py` —
-     ~270 lines, one file, no production scaffolding. The
-     spike walks the real user flow (round-0 → pick winner
-     → pick intent → round-1) via console prompts; that
-     walkthrough is what surfaced the LLM-as-router IA
-     problem on day 0.
 
 6. **Run the spike** across the hand-picked inputs and tally
    pass/fail against each gate. Capture results in
@@ -207,24 +202,10 @@ able to answer:
 - Does `tradeoffs.md` record each must-hold assumption with
   its gate, result, learning, and pivot?
 
-## Reference: image-morpher
+## Example
 
-Canonical example. Read before running this skill:
-
-- `docs/project-brief.md` — names the core hypothesis and
-  lists open technical questions to validate before any
-  build.
-- `docs/plan.md` Unit 1 ("Spike") — Day 0 precondition.
-  Decision 7 documents the plan pivot the spike forced
-  (LLM-as-router → user-picks-strategy). The "Open
-  questions to validate while building" and "Risks" tables
-  enumerate assumptions explicitly.
-- `spike/spike.py` — the single-file spike, ~270 lines,
-  real Luma + real Anthropic calls, no production
-  abstractions.
-- `spike/README.md` — describes the spike as "the
-  apparatus, not the experiment."
-
-The spike's most valuable output was the plan pivot in
-Decision 7, not a passing gate. A spike that "passes"
-without reshaping anything is suspicious.
+A prototype offers two strategies for revising a result. Test whether the
+application can infer which strategy the user wants. Compare its choice
+with the user's stated intent on representative inputs. If inference
+misses the gate, let the user choose and rerun the same cases. Record the
+design decision alongside the observations.

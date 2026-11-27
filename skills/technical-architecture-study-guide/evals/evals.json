@@ -1,0 +1,26 @@
+{
+  "skill_name": "technical-architecture-study-guide",
+  "evals": [
+    {
+      "id": 0,
+      "eval_name": "draft-retryable-ingestion",
+      "prompt": "Draft a Markdown study guide for the lead inheriting a sensor ingest service. The device API returns 202 after a durable inbox insert with unique key (device, sequence). A worker writes samples and marks the inbox row done in one transaction. The dashboard reads an hourly aggregate. An old proposal suggests streaming updates. No traffic numbers are available.",
+      "expected_output": "Trace one sample from acceptance to the delayed dashboard. Explain what a duplicate submission can establish, which records locate a stuck sample, and why 202 does not promise dashboard freshness. Label streaming as proposed, avoid invented scale figures, and include a study question with an inline answer.",
+      "files": []
+    },
+    {
+      "id": 1,
+      "eval_name": "audit-read-only-library",
+      "prompt": "Audit this guide in chat: 'Our date library always resolves ambiguous local times using the host time zone.' The published API requires a caller-supplied zone. A release note says the ambiguity default changed, but omits the new choice. The audience maintains payroll integrations. Return findings only.",
+      "expected_output": "Identify the unsupported host-zone claim and unresolved ambiguity rule, explain the impact on repeated local times, and name a versioned contract or fixture that could settle it. Scope the disposition to the audit, without editing the guide or adding service infrastructure.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "eval_name": "expand-recovery-section",
+      "prompt": "Expand only the recovery section of this build cache guide in Markdown. Runner logs establish that workers upload blobs before committing a manifest. A retry can reuse blobs by digest. Garbage collection policy is still under discussion. Explain a crash after upload and add one answered study question.",
+      "expected_output": "Explain what a blob proves and what still depends on the manifest, how a retry can reuse data, and what remains open about cleanup. Preserve the scope and distinguish a possible cleanup policy from observed behavior.",
+      "files": []
+    }
+  ]
+}

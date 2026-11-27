@@ -16,6 +16,35 @@ This repo encodes that judgment as reusable skills. Each skill captures the ment
 | `code` | Staff-level code review with a simplification lens — hot spots and leverage points first, explicit dispositions per candidate | `/code-review` |
 | `eng-feasibility` | Validates load-bearing assumptions before production code — single-file spike, falsifiable gates, build/pivot/stop decision | `/eng-feasibility` |
 | `multi-agent-design` | Gates and designs multi-agent systems — forces a documented single-agent justification before any topology is selected | `/multi-agent-design` |
+| [`technical-architecture-study-guide`](skills/technical-architecture-study-guide/SKILL.md) | Draft or audit a guide that teaches a technical lead to trace one operation, diagnose a failure, and explain why the system works this way. | `/technical-architecture-study-guide` |
+
+## Agent architecture
+
+| Skill | Decision it supports |
+| --- | --- |
+| [`/model-api-conformance`](skills/model-api-conformance/SKILL.md) | Does this model route satisfy the calling application's API contract? Build and run adapter-level tests for the primitives it uses. |
+| [`/agent-change-eval`](skills/agent-change-eval/SKILL.md) | Does the candidate improve the outcome of an assigned task? Compare it with the baseline on matched cases and identify the evidence needed for release. |
+| [`/agent-loop-governance`](skills/agent-loop-governance/SKILL.md) | Use when designing or debugging an agent that can retry, revise, or delegate on its own. Decide what authorizes the next action and when a person or runtime must stop it. |
+
+## Launch measurement
+
+Start with [`/launch-measurement-run`](skills/launch-measurement-run/SKILL.md) to run the chain or resume from existing artifacts. Each stage also works as a standalone command.
+
+| Stage | Deliverable |
+| --- | --- |
+| [`/launch-measurement-plan`](skills/launch-measurement-plan/SKILL.md) | Decision, metric definitions, denominators and guardrails |
+| [`/launch-instrumentation-spec`](skills/launch-instrumentation-spec/SKILL.md) | Verified signal map and gaps by metric |
+| [`/launch-eng-handoff`](skills/launch-eng-handoff/SKILL.md) | Implementation asks with owners and acceptance checks |
+| [`/launch-logging-audit`](skills/launch-logging-audit/SKILL.md) | Post-deployment evidence and coverage limits |
+| [`/launch-dashboard-metrics`](skills/launch-dashboard-metrics/SKILL.md) | Dashboard or build specification with validation status |
+
+## Experimentation
+
+| Skill | What it does | Reach for it when |
+| --- | --- | --- |
+| [`/experiment-design`](skills/experiment-design/SKILL.md) | Trace the product flow, choose an A/B test or rollout, check overlap with live tests, size it, and fill the tracker and pre-launch gate. | Before building an experiment. |
+| [`/experiment-pr-check`](skills/experiment-pr-check/SKILL.md) | Check the primary metric, treatment delivery and identity mapping first. Then compare the full setup PR with its tracker row and give separate merge and exposure decisions. | When a PR wires up an experiment, before merge or exposure. |
+| [`/experiment-readout`](skills/experiment-readout/SKILL.md) | Check whether the results are interpretable and publish one action with the evidence, owner and timing. | At a planned decision point or when a stop condition is met. |
 
 ## Secondary skills
 

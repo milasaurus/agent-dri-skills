@@ -6,7 +6,7 @@ Invoke the agent-dri-skills:system-design-review skill.
 
 Review the provided system design and produce a staff-level architectural assessment:
 
-1. Read CLAUDE.md and understand the project context and constraints
+1. Read the available project instructions and understand the project context and constraints
 2. Identify the design scope — the specific system, service, or data flow being reviewed
 3. Confirm the business goal and user-facing impact
    - What behavior changes for the end user?

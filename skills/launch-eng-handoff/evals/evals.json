@@ -1,0 +1,12 @@
+{
+  "skill_name": "launch-eng-handoff",
+  "evals": [
+    {
+      "id": 0,
+      "eval_name": "partial-batch-ticket",
+      "prompt": "Draft a ticket: the server logs a single success if any of three exports succeeds. Raw and modeled records lack item outcomes. A retry repeats the batch ID. We need per-item success. No issue should be filed.",
+      "expected_output": "Describe one record per item outcome, stable item/request identity across retries, exact writer and sink, downstream owner, and checks for a mixed batch and replay. Leave a draft.",
+      "files": []
+    }
+  ]
+}

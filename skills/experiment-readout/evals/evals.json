@@ -1,0 +1,19 @@
+{
+  "skill_name": "experiment-readout",
+  "evals": [
+    {
+      "id": 0,
+      "eval_name": "balanced-assignment-broken-join",
+      "prompt": "A fraud review queue trial randomized 5,000 accounts per arm. After a logging migration the ledger join kept 99% of controls and 70% of treatment accounts. The headline says 12% faster resolution. Missing completion times cannot be reconstructed and no valid period has mature outcomes. Write the decision record.",
+      "expected_output": "Separate balanced assignment from differential downstream loss. Invalidate the intended comparison, do not report causal lift, and give one action, owner or unassigned role, and a repair and rerun condition.",
+      "files": []
+    },
+    {
+      "id": 1,
+      "eval_name": "mature-randomized-result",
+      "prompt": "An onboarding trial registered 7-day activation among assigned teams. The ship rule was a lower 95% confidence bound above +1 percentage point with support contacts rising by at most 0.5 points. At the fixed final read both arms have 10,000 mature teams. Activation is 4,000 vs 4,400, with a validated interval for lift of +2.6 to +5.4 points. The upper confidence bound on the increase in support contacts is +0.2 points. No allocation or join defects. The rollout owner is Ren with a Friday release slot. Draft the tracker call.",
+      "expected_output": "Choose ship with Ren and Friday. Show counts, absolute lift, uncertainty against the registered threshold, and guardrail evidence. Draft the record without changing traffic.",
+      "files": []
+    }
+  ]
+}

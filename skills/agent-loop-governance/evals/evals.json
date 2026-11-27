@@ -1,0 +1,47 @@
+{
+  "skill_name": "agent-loop-governance",
+  "evals": [
+    {
+      "id": 0,
+      "eval_name": "parallel-extraction",
+      "prompt": "A nightly extraction agent may spend at most 30 credits per customer per night. It fans out up to ten workers, each reading the same balance before calling a model. Charges arrive a minute later. A retry of the scheduler creates a fresh run ID. Design the governance and decide what can run unattended.",
+      "expected_output": "Tie the allowance to customer and night, include restarts and in-flight calls, specify bounded allocations or atomic reservations and address unknown request cost. Propose a concurrent final-credit drill and an operational disposition grounded in available evidence.",
+      "files": []
+    },
+    {
+      "id": 1,
+      "eval_name": "ambiguous-order",
+      "prompt": "Our purchasing assistant has approval for one order of 12 replacement parts. The supplier times out after receiving the call, and there is no supplier idempotency guarantee. A new shift asks the worker to resume with 14 parts. A supervisor can pause the queue. What should govern this loop?",
+      "expected_output": "Hold ambiguous replay until reconciliation, bind approval to quantity and target, check queued and in-flight effects separately, and require fresh authority for the changed order. Identify the operative enforcement point, resume evidence, and owner.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "eval_name": "local-read-only",
+      "prompt": "A local agent checks a read-only documentation snapshot for broken cross-references. It can propose a report but cannot publish or modify files. A wrapper enforces a 20-iteration limit, and a fixture confirms Ctrl-C terminates the process with no child workers. How much oversight does this need?",
+      "expected_output": "Keep governance proportionate. Use a verifiable completion test such as visited references versus outstanding ones, preserve partial status on stop, and identify any unverified claim. Avoid requiring external reviewers or a distributed budget service.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "eval_name": "incomplete-export",
+      "prompt": "A report agent split an export of 500 requested IDs between five workers. Every worker reported success. The merged file opens and contains 500 rows, but a customer found a missing ID. The coordinator can regenerate the file and proposes saving its new batching strategy as the default. Design the next-run controls.",
+      "expected_output": "Compare the final file with the independent requested ID set, including multiplicity. Feed missing or duplicated IDs back for a bounded correction and recheck the whole export. Treat an unavailable verifier as unresolved. Evaluate the proposed default on separate held-out cases before promotion.",
+      "files": []
+    },
+    {
+      "id": 4,
+      "eval_name": "one-off-export-check",
+      "prompt": "I just want to check which IDs are missing from this export once. The expected IDs are A, B, C and the actual rows are A, A, C.",
+      "expected_output": "Use an ordinary comparison. Identify missing B and duplicate A. No autonomous follow-up, framework or delegated workers are needed.",
+      "files": []
+    },
+    {
+      "id": 5,
+      "eval_name": "shared-file-migration",
+      "prompt": "Our migration agent proposes a nightly job that discovers packages, lets workers patch each one, and regenerates a shared lockfile. Define what it can do unattended and how to tell whether to widen the next batch.",
+      "expected_output": "Identify independent edits and the shared lockfile dependency, give integration to one owner, pilot a representative subset, verify the combined result, and set bounded retries and stop conditions before widening. Do not start the migration.",
+      "files": []
+    }
+  ]
+}

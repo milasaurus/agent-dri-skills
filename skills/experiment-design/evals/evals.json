@@ -1,0 +1,19 @@
+{
+  "skill_name": "experiment-design",
+  "evals": [
+    {
+      "id": 0,
+      "eval_name": "shared-warehouse-queues",
+      "prompt": "We want to test a shared warehouse picking scheduler. Success is the share of facilities that clear their backlog by midnight. We see 2 million picks but only 18 facilities per week. A staffing pilot already changes half their schedules. Fill our setup tracker and give the pre-launch gate.",
+      "expected_output": "Choose a unit that accounts for shared queues, check overlap with the staffing pilot, size from eligible facilities and variance, and identify any missing baseline or feasible alternative. Provide both rows and an explicit build decision without inventing power or clearance.",
+      "files": []
+    },
+    {
+      "id": 1,
+      "eval_name": "archive-reader-ramp",
+      "prompt": "We are replacing an archive reader in a batch service. There is no holdout. Operators want to ramp 5%, 25%, then 100% and want to tell customers that successful restores went up. Both paths emit checksums. What belongs in the experiment tracker?",
+      "expected_output": "Register a safety rollout with comparable checksum evidence, integrity boundaries, per-stage observation, rollback and owners. Explain the limit on causal lift and how a concurrent comparison would change it.",
+      "files": []
+    }
+  ]
+}

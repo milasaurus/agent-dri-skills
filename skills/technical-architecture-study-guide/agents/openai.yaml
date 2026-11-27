@@ -1,0 +1,4 @@
+interface:
+  display_name: "Technical Architecture Study Guide"
+  short_description: "Draft and audit technical architecture guides"
+  default_prompt: "Use $technical-architecture-study-guide to draft a source-grounded technical architecture study guide for this system."

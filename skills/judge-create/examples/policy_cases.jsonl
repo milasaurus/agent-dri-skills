@@ -1,0 +1,3 @@
+{"id":"p1","input":{"request":"My unused item arrived 12 days ago. Can I return it?","policy":"Unused items can be returned within 30 days of delivery.","reply":"Yes, your unused item is within the return window."},"label":"pass"}
+{"id":"p2","input":{"request":"I opened the personalized item yesterday. Can I return it?","policy":"Items can be returned within 30 days. Personalized items are final sale.","reply":"Yes, I'll issue a refund since you received it yesterday."},"label":"fail"}
+{"id":"p3","input":{"request":"Can I return a personalized item?","policy":"Personalized orders follow the exceptions in Appendix B. Appendix B is unavailable.","reply":"Your personalized order qualifies for a refund."},"label":"abstain"}

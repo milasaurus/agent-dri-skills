@@ -1,0 +1,19 @@
+{
+  "skill_name": "judge-create",
+  "evals": [
+    {
+      "id": 0,
+      "eval_name": "grounded-support-promise",
+      "prompt": "Build a grader for whether our returns assistant promises more than the supplied policy allows. Some source excerpts omit the relevant exception. We have a model client and reviewer labels.",
+      "expected_output": "Build a semantic adapter with the policy, request and reply as evidence, keep labels hidden, cite the decisive promise and exception, abstain on missing evidence, and measure false passes on unseen cases before release.",
+      "files": []
+    },
+    {
+      "id": 1,
+      "eval_name": "state-vs-tool-acknowledgment",
+      "prompt": "Our batch editor reports that all tasks finished. We can read the requested changes and final records. Give us a working judge. Some reads time out.",
+      "expected_output": "Use a deterministic final-state comparison, run fixtures including partial success, and distinguish an unavailable record snapshot from a runner failure. Report coverage and a scoped disposition.",
+      "files": []
+    }
+  ]
+}

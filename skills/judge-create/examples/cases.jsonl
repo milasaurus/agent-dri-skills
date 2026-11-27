@@ -1,0 +1,4 @@
+{"id":"a","input":{"requested_ids":["r1","r2","r3"],"exported_ids":["r3","r1","r2"]},"label":"pass"}
+{"id":"b","input":{"requested_ids":["r1","r2","r3"],"exported_ids":["r1","r2","r2"]},"label":"fail"}
+{"id":"c","input":{"requested_ids":["r1"],"exported_ids":null},"label":"abstain"}
+{"id":"d","input":{"requested_ids":["r4"],"exported_ids":[]}}

@@ -23,6 +23,7 @@ This repo encodes that judgment as reusable skills. Each skill captures the ment
 | --- | --- |
 | [`/model-api-conformance`](skills/model-api-conformance/SKILL.md) | Does this model route satisfy the calling application's API contract? Build and run adapter-level tests for the primitives it uses. |
 | [`/agent-change-eval`](skills/agent-change-eval/SKILL.md) | Does the candidate improve the outcome of an assigned task? Compare it with the baseline on matched cases and identify the evidence needed for release. |
+| [`/agent-loop-governance`](skills/agent-loop-governance/SKILL.md) | What can this loop do unattended, who can stop it, and what evidence makes it safe to resume? Trace the controls through a real run. |
 
 ## Launch measurement
 

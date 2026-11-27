@@ -1,0 +1,26 @@
+{
+  "skill_name": "agent-loop-governance",
+  "evals": [
+    {
+      "id": 0,
+      "eval_name": "parallel-extraction",
+      "prompt": "A nightly extraction agent may spend at most 30 credits per customer per night. It fans out up to ten workers, each reading the same balance before calling a model. Charges arrive a minute later. A retry of the scheduler creates a fresh run ID. Design the governance and decide what can run unattended.",
+      "expected_output": "Tie the allowance to customer and night, include restarts and in-flight calls, specify bounded allocations or atomic reservations and address unknown request cost. Propose a concurrent final-credit drill and an operational disposition grounded in available evidence.",
+      "files": []
+    },
+    {
+      "id": 1,
+      "eval_name": "ambiguous-order",
+      "prompt": "Our purchasing assistant has approval for one order of 12 replacement parts. The supplier times out after receiving the call, and there is no supplier idempotency guarantee. A new shift asks the worker to resume with 14 parts. A supervisor can pause the queue. What should govern this loop?",
+      "expected_output": "Hold ambiguous replay until reconciliation, bind approval to quantity and target, check queued and in-flight effects separately, and require fresh authority for the changed order. Identify the operative enforcement point, resume evidence, and owner.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "eval_name": "local-read-only",
+      "prompt": "A local agent checks a read-only documentation snapshot for broken cross-references. It can propose a report but cannot publish or modify files. A wrapper enforces a 20-iteration limit, and a fixture confirms Ctrl-C terminates the process with no child workers. How much oversight does this need?",
+      "expected_output": "Keep governance proportionate. Use a verifiable completion test such as visited references versus outstanding ones, preserve partial status on stop, and identify any unverified claim. Avoid requiring external reviewers or a distributed budget service.",
+      "files": []
+    }
+  ]
+}

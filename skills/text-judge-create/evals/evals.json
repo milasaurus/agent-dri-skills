@@ -1,0 +1,19 @@
+{
+  "skill_name": "text-judge-create",
+  "evals": [
+    {
+      "id": 0,
+      "eval_name": "policy-exception",
+      "prompt": "Build a grader for whether our returns assistant promises more than the supplied policy allows. Some source excerpts omit the relevant exception. We have a model client and reviewer labels.",
+      "expected_output": "Build a semantic adapter with the policy, request and reply as evidence, keep labels hidden, cite the decisive promise and exception, abstain on missing evidence, and measure false passes on unseen cases before release.",
+      "files": []
+    },
+    {
+      "id": 1,
+      "eval_name": "summary-paraphrase",
+      "prompt": "Check whether a meeting summary preserves a conditional deadline, even if it uses different words.",
+      "expected_output": "Compare the summary with the source, test a faithful paraphrase and a dropped condition, and cite the evidence. Missing source yields an abstention.",
+      "files": []
+    }
+  ]
+}

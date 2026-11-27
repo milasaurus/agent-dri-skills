@@ -11,7 +11,7 @@ A judge for assembly instructions might approve a diagram because the part is pr
 
 ## When to use
 
-Use to create a new visual grader or bring an existing visual rubric into a caller's evaluation harness. If the verdict depends only on text, a tool trace or final records, use [judge creation](../judge-create/SKILL.md). For an exact property such as image dimensions, implement a deterministic check. For a judge that already has a contract and needs better agreement, use [judge tuning](../judge-tune/SKILL.md).
+Use to create a new visual grader or bring an existing visual rubric into a caller's evaluation harness. If the verdict depends only on text, a tool trace or final records, use [judge creation](../judge-create/SKILL.md). For an exact property such as image dimensions, use the [deterministic judge](../deterministic-judge-create/SKILL.md). For a judge that already has a contract and needs better agreement, use [judge tuning](../judge-tune/SKILL.md).
 
 ## Process
 

@@ -14,6 +14,34 @@
       "prompt": "Our batch editor reports that all tasks finished. We can read the requested changes and final records. Give us a working judge. Some reads time out.",
       "expected_output": "Use a deterministic final-state comparison, run fixtures including partial success, and distinguish an unavailable record snapshot from a runner failure. Report coverage and a scoped disposition.",
       "files": []
+    },
+    {
+      "id": 2,
+      "eval_name": "visual-only",
+      "prompt": "Build a judge for whether the camera remains centered on the same actor through a cut. We have the reference and candidate clips.",
+      "expected_output": "Execute the visual guide, preserve temporal evidence and test the scorer on a cut. Distinguish a runnable candidate from validated performance.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "eval_name": "mixed-with-missing-reference",
+      "prompt": "Judge a catalog export. Dimensions and label appearance are required. For one file the dimensions match but the reference is missing. For another the width is wrong and the label matches. Give one result per file.",
+      "expected_output": "Run deterministic and visual specialists with shared case IDs. Return unresolved for the first file and fail for the second, exposing each criterion and the missing reference.",
+      "files": []
+    },
+    {
+      "id": 4,
+      "eval_name": "metadata-only",
+      "prompt": "Grade uploaded videos solely on duration between 9.9 and 10.1 seconds inclusive.",
+      "expected_output": "Run only the deterministic guide on reliable duration data. Test both boundaries and a failure.",
+      "files": []
+    },
+    {
+      "id": 5,
+      "eval_name": "unsupported-preference",
+      "prompt": "Create a judge that tells us whether the commissioner personally likes each poster. All we have are unsigned export filenames.",
+      "expected_output": "Identify the missing preference evidence or human decision. Hold the verdict and avoid inferring personal taste from filenames.",
+      "files": []
     }
   ]
 }

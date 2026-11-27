@@ -44,7 +44,7 @@ regardless of how well the rest of the architecture is designed.
 
 A worker implementing a change needs the request, upstream decisions, constraints and relevant tool results. An independent outcome judge needs the original brief, rubric and result as delivered. Withhold the generator's self-assessment, candidate identity, other judges' votes and hidden labels when those would reveal or bias the answer. A process audit may need tool events as evidence. Specify which events establish the property under review.
 
-Try a read-only, versioned grader call before adding a stateful reviewer agent. A separate agent earns its complexity when it must gather additional evidence or requires a distinct authority boundary. The judge reports a verdict, evidence or an abstention. The controller owns retry, escalation and release. Pilot on human-labeled cases that expose shared blind spots before relying on agreement between models. For a visual reviewer, use [VLM judge creation](../vlm-judge-create/SKILL.md) to establish the evidence and grading contract.
+Try a read-only, versioned grader call before adding a stateful reviewer agent. A separate agent earns its complexity when it must gather additional evidence or requires a distinct authority boundary. The judge reports a verdict, evidence or an abstention. The controller owns retry, escalation and release. Pilot on human-labeled cases that expose shared blind spots before relying on agreement between models. Use [judge creation](../judge-create/SKILL.md) to choose the evidence and build a grader for the reviewer’s task.
 
 **When the full trace doesn't fit.** Raw orchestrator traces grow long and
 eventually exceed a subagent's context window. The options in order of

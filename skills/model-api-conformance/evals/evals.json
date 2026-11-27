@@ -1,0 +1,19 @@
+{
+  "skill_name": "model-api-conformance",
+  "evals": [
+    {
+      "id": 0,
+      "eval_name": "streaming-tool",
+      "prompt": "Our scheduling adapter receives start(call 7), an argument fragment containing a complete JSON object, then disconnect. On the next request the provider finishes normally. Build a regression test at our adapter entry point. The executor requires a completed proposal. Only fixture replay is available.",
+      "expected_output": "Exercise both sequences through the adapter and a recording consumer. The interrupted stream must cause no dispatch; the completed one produces one validated proposal with the correlated ID. Separate observed adapter results from untested endpoint behavior.",
+      "files": []
+    },
+    {
+      "id": 1,
+      "eval_name": "one-shot-local",
+      "prompt": "A local classification service returns a status and a schema-constrained label. It has no streaming, tool calls, or usage data. Through the installed adapter, valid JSON and a truncated response both normalize to a default label. Can we enable this route?",
+      "expected_output": "Focus on the one-shot schema and stop/error contract. Demonstrate the silent default at the adapter boundary; reject or surface truncation, test valid output, and withhold the affected route until it passes. Missing usage remains unknown if consumed.",
+      "files": []
+    }
+  ]
+}

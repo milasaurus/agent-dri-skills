@@ -7,7 +7,7 @@ Invoke the agent-dri-skills:code skill.
 Review the provided code surface and produce a staff-level
 simplification assessment:
 
-1. Read CLAUDE.md and study neighboring code to understand
+1. Read the available project instructions and study neighboring code to understand
    project conventions before recommending any change.
 2. Confirm the scope — the specific files, functions, or
    symbols being reviewed. Push back on requests with no

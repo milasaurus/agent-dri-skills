@@ -17,6 +17,13 @@ This repo encodes that judgment as reusable skills. Each skill captures the ment
 | `eng-feasibility` | Validates load-bearing assumptions before production code — single-file spike, falsifiable gates, build/pivot/stop decision | `/eng-feasibility` |
 | `multi-agent-design` | Gates and designs multi-agent systems — forces a documented single-agent justification before any topology is selected | `/multi-agent-design` |
 
+## Agent architecture
+
+| Skill | Decision it supports |
+| --- | --- |
+| [`/model-api-conformance`](skills/model-api-conformance/SKILL.md) | Does this model route satisfy the calling application's API contract? Build and run adapter-level tests for the primitives it uses. |
+| [`/agent-change-eval`](skills/agent-change-eval/SKILL.md) | Does the candidate improve the outcome of an assigned task? Compare it with the baseline on matched cases and identify the evidence needed for release. |
+
 ## Launch measurement
 
 Start with [`/launch-measurement-run`](skills/launch-measurement-run/SKILL.md) to run the chain or resume from existing artifacts. Each stage also works as a standalone command.

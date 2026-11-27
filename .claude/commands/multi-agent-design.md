@@ -7,7 +7,7 @@ Invoke the agent-dri-skills:multi-agent-design skill.
 Design the multi-agent system described and produce an ADR with a
 proceed / simplify first / resolve open questions / redesign disposition:
 
-1. Read CLAUDE.md and any project brief to understand what the system
+1. Read the available project instructions and any project brief to understand what the system
    does, who it serves, and what hard constraints apply (latency
    budget, cost ceiling, context window limits, reliability bar).
    If neither exists, write the task statement and constraints first

@@ -1,0 +1,19 @@
+{
+  "skill_name": "agent-change-eval",
+  "evals": [
+    {
+      "id": 0,
+      "eval_name": "batch-reconciliation",
+      "prompt": "Our new matching agent resolved 88 of 110 assigned ledger batches versus 84 for the old version. It ran on a different month and only successful batches have item-level validation. Design an evaluation we can run without changing production.",
+      "expected_output": "Use a matched snapshot, compare final records against reconciliation invariants, include all assigned batches, report missing validation and costs, and decline a causal or release claim based on unmatched months. No interactive chat or human scoring is required.",
+      "files": []
+    },
+    {
+      "id": 1,
+      "eval_name": "retrieval-assistant",
+      "prompt": "A proposed retrieval change makes help-desk answers faster. We have a held-out set of questions with policy revisions, feedback from users of only the current version, and an isolated replay service. Decide what we can learn before rollout.",
+      "expected_output": "Replay matched questions against the same policy revision, independently check correctness and citations, stratify regressions, and measure latency alongside task success. Label effects on live users unmeasured and specify a comparable, bounded trial.",
+      "files": []
+    }
+  ]
+}

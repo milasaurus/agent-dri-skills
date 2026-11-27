@@ -7,7 +7,7 @@ Invoke the agent-dri-skills:eng-feasibility skill.
 Build a feasibility spike for the project described and
 produce a build / pivot / stop decision:
 
-1. Read CLAUDE.md and any project brief or plan to frame
+1. Read the available project instructions and any project brief or plan to frame
    what the project is, who it serves, and what ships.
 
 2. **Always produce the assumptions list before any code.**
@@ -45,6 +45,4 @@ produce a build / pivot / stop decision:
 
 If no assumptions list exists, do not start writing code.
 The list is a precondition. Use the `eng-feasibility` skill
-to validate the spike, gates, and decision; refer to
-image-morpher (`docs/plan.md` Unit 1, `spike/spike.py`) as
-the canonical example.
+to validate the spike, gates, and decision.

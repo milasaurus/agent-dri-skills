@@ -11,7 +11,7 @@ An agent can use fewer calls by giving up sooner. Evaluate the externally observ
 
 ## When to use
 
-Use for one-shot or long-running workflows, interactive or unattended systems, and single agents or delegated tasks. For protocol compatibility alone use [model-api-conformance](../model-api-conformance/SKILL.md). If a release needs a broader product measurement plan, continue with [launch-measurement-plan](../launch-measurement-plan/SKILL.md).
+Use for one-shot or long-running workflows, interactive or unattended systems, and single agents or delegated tasks. If the capability lacks a reusable task suite, use [create evals](../create-evals/SKILL.md) to build one. For protocol compatibility alone use [model-api-conformance](../model-api-conformance/SKILL.md). If a release needs a broader product measurement plan, continue with [launch-measurement-plan](../launch-measurement-plan/SKILL.md).
 
 ## Process
 

@@ -1,0 +1,26 @@
+{
+  "skill_name": "create-evals",
+  "evals": [
+    {
+      "id": 0,
+      "eval_name": "feedback-to-suite",
+      "prompt": "Our dispatch assistant sometimes updates the first stop but leaves the second unchanged. Other users intentionally change only one stop. Build a regression suite. We have synthetic route snapshots and no running service.",
+      "expected_output": "Deliver distinct briefs, isolated snapshots, edit invariants, case fixtures and executable scoring with a positive and partial result. Group related cases before splitting. State that routing-service performance and user sentiment are unmeasured.",
+      "files": []
+    },
+    {
+      "id": 1,
+      "eval_name": "creative-workflow",
+      "prompt": "Build evals for a slide assistant that applies a supplied style guide. The same brief goes to two departments with conflicting templates. We have export files, reviewer time and a test tenant.",
+      "expected_output": "Build cases for both audiences and guide precedence, deliverable format, intent and applicable craft. Grade the exported deck, reserve conflicting unspecified cases for review, calibrate any semantic or visual grader, reset tenant state, run a pilot where available and report coverage.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "eval_name": "comparison-handoff",
+      "prompt": "We already have a frozen support-answer bank and a calibrated grader. I want to know whether a new retrieval configuration beats the current one.",
+      "expected_output": "Reuse the suite and route the comparison to agent-change-eval. Avoid regenerating the bank or tuning the judge on the test split.",
+      "files": []
+    }
+  ]
+}

@@ -40,7 +40,11 @@ python3 scripts/run.py examples/cases.jsonl --judge python3 examples/export_judg
 
 ### Run a text-model judge
 
-The [text judge guide](../text-judge-create/SKILL.md) has commands to preview the effective prompt and run the support-policy example. The same [runner](scripts/run.py) accepts any trusted command that reads one input object from stdin and returns a JSON verdict (`pass`, `fail`, or `abstain`) and evidence string. Human labels and case IDs stay on the scoring side.
+The [text judge guide](../text-judge-create/SKILL.md) has commands to preview the effective prompt and run the support-policy example. The same [runner](scripts/run.py) accepts any trusted command that reads one input object from stdin and returns a JSON verdict (`pass`, `fail`, or `abstain`) and evidence string. Human labels and case IDs stay on the scoring side. Mixed adapters may also return a `criteria` object keyed by criterion, as below. Map a visual judge's `unclear` to `abstain` for this runner. A child execution failure can be recorded as `{"error":"decoder timed out"}`. The runner preserves it, counts it in `criterion_errors`, and exits nonzero after saving the results.
+
+```json
+{"verdict":"fail","evidence":"The width is wrong.","criteria":{"width":{"verdict":"fail","evidence":"Expected 1200 px, got 900."},"label":{"verdict":"abstain","evidence":"Missing reference image."}}}
+```
 
 ## Common rationalizations
 

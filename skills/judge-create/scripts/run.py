@@ -30,17 +30,41 @@ def load_cases(path):
     return cases
 
 
+def read_verdict(data):
+    if not isinstance(data, dict) or data.get("verdict") not in VERDICTS:
+        raise ValueError("Missing or invalid verdict.")
+    evidence = data.get("evidence")
+    if not isinstance(evidence, str) or not evidence.strip():
+        raise ValueError("Missing evidence string.")
+    return {"verdict": data["verdict"], "evidence": evidence}
+
+
+def read_criteria(criteria):
+    if not isinstance(criteria, dict) or not criteria:
+        raise ValueError("Expected a nonempty object of named criteria.")
+    findings = {}
+    for name, item in criteria.items():
+        if not name.strip() or not isinstance(item, dict):
+            raise ValueError("Each named criterion needs a result object.")
+        if "error" in item:
+            error = item["error"]
+            if not isinstance(error, str) or not error.strip() or "verdict" in item:
+                raise ValueError(f"Invalid error for criterion {name}.")
+            findings[name] = {"error": error}
+        else:
+            findings[name] = read_verdict(item)
+    return findings
+
+
 def predict(command, inputs, timeout):
     try:
         result = subprocess.run(command, input=json.dumps(inputs), capture_output=True,
                                 text=True, timeout=timeout, check=True)
         parsed = json.loads(result.stdout)
-        if not isinstance(parsed, dict) or parsed.get("verdict") not in VERDICTS:
-            raise ValueError("Missing or invalid verdict.")
-        evidence = parsed.get("evidence")
-        if not isinstance(evidence, str) or not evidence.strip():
-            raise ValueError("Missing evidence string.")
-        return {"verdict": parsed["verdict"], "evidence": evidence}
+        prediction = read_verdict(parsed)
+        if "criteria" in parsed:
+            prediction["criteria"] = read_criteria(parsed["criteria"])
+        return prediction
     except subprocess.TimeoutExpired:
         return {"error": "Judge timed out."}
     except subprocess.CalledProcessError as exc:
@@ -59,6 +83,8 @@ def summarize(rows):
         "labeled": len(labeled),
         "unlabeled": len(rows) - len(labeled),
         "errors": sum("error" in row for row in rows),
+        "criterion_errors": sum("error" in finding for row in rows
+                                for finding in row.get("criteria", {}).values()),
         "abstentions": sum(row.get("verdict") == "abstain" for row in rows),
         "human_binary_labels": sum(row["label"] in DECISIONS for row in labeled),
         "binary_decisions_on_human_binary_labels": len(decided),
@@ -97,7 +123,7 @@ def main():
         rows.append(row)
     summary = summarize(rows)
     print(json.dumps({"summary": summary}))
-    return 1 if summary["errors"] else 0
+    return 1 if summary["errors"] or summary["criterion_errors"] else 0
 
 
 if __name__ == "__main__":

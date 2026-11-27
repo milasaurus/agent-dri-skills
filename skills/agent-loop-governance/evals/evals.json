@@ -21,6 +21,13 @@
       "prompt": "A local agent checks a read-only documentation snapshot for broken cross-references. It can propose a report but cannot publish or modify files. A wrapper enforces a 20-iteration limit, and a fixture confirms Ctrl-C terminates the process with no child workers. How much oversight does this need?",
       "expected_output": "Keep governance proportionate. Use a verifiable completion test such as visited references versus outstanding ones, preserve partial status on stop, and identify any unverified claim. Avoid requiring external reviewers or a distributed budget service.",
       "files": []
+    },
+    {
+      "id": 3,
+      "eval_name": "incomplete-export",
+      "prompt": "A report agent split an export of 500 requested IDs between five workers. Every worker reported success. The merged file opens and contains 500 rows, but a customer found a missing ID. The coordinator can regenerate the file and proposes saving its new batching strategy as the default. Design the next-run controls.",
+      "expected_output": "Compare the final file with the independent requested ID set, including multiplicity. Feed missing or duplicated IDs back for a bounded correction and recheck the whole export. Treat an unavailable verifier as unresolved. Evaluate the proposed default on separate held-out cases before promotion.",
+      "files": []
     }
   ]
 }

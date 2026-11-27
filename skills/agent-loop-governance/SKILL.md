@@ -22,6 +22,14 @@ Use when deciding what a loop may do on its own and how an operator can take bac
 5. **Define stop and recovery in terms of effects.** Name what counts as no progress, what can safely retry, and what must pause for reconciliation. For a timeout after a possible write, look up the original operation using a durable identifier before replay. If its outcome cannot be established and replay could duplicate an effect, hold it for an owner. Specify who can stop a run or a group of runs, how new and queued work is denied, when in-flight work can still finish, and what happens to late results. On resume, recheck authority, remaining budget and completed effects at the last durable checkpoint. Record the stop reason and who authorized resumption.
 6. **Test the decision boundary.** Pick a failure that crosses two components. If stop and dispatch race, identify the instant a dispatch counts as admitted. Show that a worker claiming work after stop is denied and account for any previously admitted effect that could still land. If two children race for the last allowance, verify at most one authorized dispatch. State the starting state, injected event and observable result that would falsify each guarantee. Use isolated fixtures and label unexecuted checks as proposed.
 
+### How does an agent know what to change on its next attempt?
+
+For a task that permits revision, have the planner name an observable acceptance check before the first attempt. Give the agent a way to run the check on the actual result and see the specific failure. For example, a report can render correctly while silently omitting records. Compare the exported IDs with the requested set and return the missing IDs to the worker. Keep the acceptance rule and expected set outside the worker's write authority.
+
+Trace three outcomes. A pass ends the task when it covers the whole request. A recoverable failure can authorize a different approach within the remaining allowance. An unavailable check, or repeated attempts with no new evidence, leaves the result unverified and triggers the run's stop or review rule. For a subjective requirement, name the person or independent reviewer whose feedback can settle it.
+
+Fixing this report demonstrates self-correction within one run. If the agent proposes saving a new export strategy for future runs, evaluate that version separately on unseen cases before promotion. For parallel work, pilot a small batch first and verify the combined result for omissions and duplicates even when every child reports success.
+
 ## What to deliver
 
 Lead with the autonomy decision for the requested scope. Include a short walkthrough and one control table, using the caller’s actual actions and components. A useful row answers who can say no, when they do it, and what record lets someone verify the outcome.
@@ -48,3 +56,5 @@ Choose **allow** for a specified scope with demonstrated controls, **limit** for
 ## Source
 
 The distinction between the working loop and the harness with authority to stop it draws on the [public introduction to Linas Beliūnas’s essay on loop governance](https://linas.substack.com/p/ai-agent-loop-governance).
+
+For planning and correction from environmental feedback, see [Theo’s talk transcript](https://www.linkedin.com/posts/linasbeliunas_anthropic-research-lead-nailed-it-99-activity-7475264397532225536-m9Cc). For piloting parallel work, see [Anthropic’s guide to building loops](https://claude.com/resources/articles/getting-started-with-loops).

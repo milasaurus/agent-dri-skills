@@ -19,7 +19,7 @@ Use the caller’s existing runner, graders and evidence store. If there is no r
 
 ### Plan a test from a PR
 
-Read the diff and follow it to the path a real request takes. Identify who receives the changed instruction, which flag or permission makes it reachable, and what outcome should change. Choose a case that would fail under the old behavior, a nearby case that should still pass, and any consequential regression the change could introduce. Reuse representative cases and starting state where available.
+Read the diff and follow it to the path a real request takes. Identify who receives the changed instruction, which flag or permission makes it reachable, and what outcome should change. Choose a case that would fail under the old behavior, a nearby case that should still pass, and any consequential regression the change could introduce. Reuse representative cases and starting state where available. If you need a fresh sample from traffic, use [promptbank](../promptbank/SKILL.md) and pin the same prepared bank for both arms.
 
 For each test give the input, setup, baseline and candidate revisions, expected difference, and the trace event or final-state check that would settle it. Identify the smallest runnable command or manual replay supported by the checkout. Mark tests as proposed until exercised. If the runner lacks the tool or identity needed for this path, identify the surface that can test it.
 

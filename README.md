@@ -26,6 +26,7 @@ Use `contract-only` for the reusable rules or `task-only` for a fresh goal. When
 | Skill | Decision it supports |
 | --- | --- |
 | [`/model-api-conformance`](skills/model-api-conformance/SKILL.md) | Does this model route satisfy the calling application's API contract? Build and run adapter-level tests for the primitives it uses. |
+| [`/promptbank`](skills/promptbank/SKILL.md) | Build a representative prompt set from production traffic using a versioned sampling recipe. |
 | [`/create-evals`](skills/create-evals/SKILL.md) | Turn a capability or a recurring failure into a reusable suite with realistic cases, observable end states, grading rules and a pilot run. |
 | [`/agent-hillclimb`](skills/agent-hillclimb/SKILL.md) | Plan tests for a behavior-changing PR, verify what happened in a trace, or iterate on one change at a time against a baseline. |
 | [`/agent-change-eval`](skills/agent-change-eval/SKILL.md) | Does the candidate improve the outcome of an assigned task? Compare it with the baseline on matched cases and identify the evidence needed for release. |

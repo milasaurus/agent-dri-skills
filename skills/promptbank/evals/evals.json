@@ -1,0 +1,33 @@
+{
+  "skill_name": "promptbank",
+  "evals": [
+    {
+      "id": 0,
+      "eval_name": "outcome-biased-source",
+      "prompt": "Build a representative bank of all support requests. We only have an export of tickets with an issued refund and there is no access to intake records.",
+      "expected_output": "Identify the bias, describe the limited refund-only population and request an intake snapshot for the broader claim. Report the missing coverage.",
+      "files": []
+    },
+    {
+      "id": 1,
+      "eval_name": "short-frozen-cohort",
+      "prompt": "The recipe calls for 30 tickets from each of two entry channels last week. After eligibility and redaction, chat has 30 usable cases and email has 22. Can we give both candidate versions a reusable bank?",
+      "expected_output": "Keep the window and recipe fixed. Report 52/60 with the email shortfall, track drops by stage and reason, and give both arms the same pinned IDs and digest.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "eval_name": "context-and-retries",
+      "prompt": "Build a bank from an approved export of scheduling requests. Some turns say “move it to Friday,” some retry the same booking, and each row contains the later confirmation screen.",
+      "expected_output": "Choose the sampling unit, deduplicate retries at that unit, preserve authorized prior booking context, and exclude the later confirmation. Group related cases across splits and flag unusable references.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "eval_name": "recipe-only",
+      "prompt": "Design a sampling recipe for comparing a command-line assistant on batch-import requests. We have no snapshot or execution access yet.",
+      "expected_output": "Deliver the population, unit, time window, stable selection, deduplication, preparation and coverage checks as a recipe. Mark the bank unbuilt and avoid claiming counts or a digest.",
+      "files": []
+    }
+  ]
+}

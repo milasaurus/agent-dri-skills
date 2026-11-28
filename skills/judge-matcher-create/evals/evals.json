@@ -1,0 +1,26 @@
+{
+  "skill_name": "judge-matcher-create",
+  "evals": [
+    {
+      "id": 0,
+      "eval_name": "meeting-duplicates",
+      "prompt": "Score three meeting action items. The extractor returned three, but two paraphrase the contract task and the budget task is missing.",
+      "expected_output": "Keep three predicted IDs. Assign two matches, one FP, one FN and 2/3 precision and recall. Expose the duplicate candidate and missed reference.",
+      "files": []
+    },
+    {
+      "id": 1,
+      "eval_name": "overlapping-inspection-defects",
+      "prompt": "On a photographed panel, finding A qualifies for defect 1 or 2, finding B only for 1. All qualifying pairs are human verified. A later image has a failed extraction and an empty human list.",
+      "expected_output": "Build one-to-one matching that assigns A to 2 and B to 1. Preserve the failure on the later image as unresolved instead of treating the prediction as empty.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "eval_name": "semantic-contract",
+      "prompt": "A model pairs requirements across languages. It sometimes treats a permission as an obligation. We need per-document compliance scores.",
+      "expected_output": "Define material attributes, measure hard-negative equivalence and held-out assignments separately from extraction, score accepted pairs in code, and mark candidate pending validation if evidence is missing.",
+      "files": []
+    }
+  ]
+}

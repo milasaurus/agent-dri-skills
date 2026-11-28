@@ -11,7 +11,7 @@ Adding a clause can fix four false rejects and introduce four false accepts. Com
 
 ## When to use
 
-Use with a defined judging task and a development set with human labels. This loop targets one categorical label per item, including human-labeled pairwise preferences. For list extraction or numeric scores, agree on a task-appropriate matcher and objective first. For a new grader, start with [judge creation](../judge-create/SKILL.md) to select and run the relevant specialist. To evaluate a change to the agent being judged, use [agent change evaluation](../agent-change-eval/SKILL.md).
+Use with a defined judging task and a development set with human labels. For a deployment decision about a frozen scorer, run [judge validation](../judge-validate/SKILL.md) on saved predictions. This loop targets one categorical label per item, including human-labeled pairwise preferences. For list extraction or numeric scores, agree on a task-appropriate matcher and objective first. For a new grader, start with [judge creation](../judge-create/SKILL.md) to select and run the relevant specialist. To evaluate a change to the agent being judged, use [agent change evaluation](../agent-change-eval/SKILL.md).
 
 ## Process
 

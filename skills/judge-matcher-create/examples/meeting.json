@@ -1,0 +1,44 @@
+{
+  "references": [
+    {
+      "id": "r1",
+      "action": "Mina sends the contract."
+    },
+    {
+      "id": "r2",
+      "action": "Sam books the room."
+    },
+    {
+      "id": "r3",
+      "action": "Lee shares the budget."
+    }
+  ],
+  "predictions": [
+    {
+      "id": "p1",
+      "action": "Mina will send the contract."
+    },
+    {
+      "id": "p2",
+      "action": "Sam reserves the room."
+    },
+    {
+      "id": "p3",
+      "action": "Send the contract (Mina)."
+    }
+  ],
+  "eligible_pairs": [
+    [
+      "p1",
+      "r1"
+    ],
+    [
+      "p2",
+      "r2"
+    ],
+    [
+      "p3",
+      "r1"
+    ]
+  ]
+}

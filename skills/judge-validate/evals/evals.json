@@ -1,0 +1,26 @@
+{
+  "skill_name": "judge-validate",
+  "evals": [
+    {
+      "id": 0,
+      "eval_name": "rare-costly-error",
+      "prompt": "A frozen vendor refund judge agreed on 92/100 held-out replies. Eight replies were excluded refunds and it approved all eight. We want to block releases automatically. Our fallback is a human reviewer.",
+      "expected_output": "Show 8/8 false approvals in the excluded slice. Reject automated gating. Scope any advisory use to supported cases with human review. Keep the vendor frozen and seek repeatability evidence.",
+      "files": []
+    },
+    {
+      "id": 1,
+      "eval_name": "sparse-runs",
+      "prompt": "We have two unchanged document-score exports, a frozen cutoff and adjudicated cases. One case ID repeats in run two, three predictions are absent, and two decisions changed. May we use it for unattended release?",
+      "expected_output": "Reject the malformed run or repair from source. Join against the intended roster, distinguish missing from abstention, and assess repeatability only on valid paired IDs. Withhold gate approval pending evidence.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "eval_name": "deterministic-gate",
+      "prompt": "A rules engine checks immutable export IDs. On 400 independent held-out passes and 400 independent held-out failures it matched all labels with full coverage. Replay was identical. The owner requires one-sided 95% upper error bounds under 1% for each class, full coverage and manual handling for malformed inputs. Validate this version.",
+      "expected_output": "Compute per-class upper bounds around 0.75%, verify agreed scope and fallback, and recommend safe to gate for this decision. No tuning or provider calls are necessary.",
+      "files": []
+    }
+  ]
+}

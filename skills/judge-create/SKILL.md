@@ -20,6 +20,7 @@ Start here when the caller describes what success means. Choose the judge type y
 
    | What settles the decision? | Specialist to run |
    | --- | --- |
+   | A set of expected findings, such as all obligations in a brief or defects in an image | [Set matcher](../judge-matcher-create/SKILL.md). Use the relevant extractor below when findings still need to be derived. Pass its frozen list to the matcher. |
    | An exact rule over records, bytes, events, timestamps or numeric tolerances | [Deterministic judge](../deterministic-judge-create/SKILL.md) |
    | The meaning of a reply, source, transcript or explanation | [Text judge](../text-judge-create/SKILL.md) |
    | A visible property or change in an image or video | [Visual judge](../vlm-judge-create/SKILL.md) |
@@ -29,6 +30,8 @@ Start here when the caller describes what success means. Choose the judge type y
 4. **Return a working judge and say what you verified.** Exercise a pass and a plausible failure. For mixed tasks, include a case where specialists disagree and one with missing evidence. Where independent labels are available, compare the final decision at the unit the caller will consume. Otherwise mark agreement as unmeasured. Show coverage, false passes and false fails. Keep operational errors, abstentions and unlabeled cases distinct. Save the rubric, input and matcher versions, case-level evidence and the configuration that produced the run. State any unexecuted checks and the evidence still needed for release.
 
 For example, a product image must be 1200 × 1200 and preserve the product's original label. Read the dimensions from the file and compare the label visually against the reference. A correct size with a visibly changed label fails. If the size passes and the reference is missing, the overall verdict is unresolved. A size failure remains decisive even when the visual check abstains.
+
+For set-valued criteria, keep individual item IDs, unmatched findings and set metrics in the matcher output. Use the categorical runner below only if the caller defined a case-level threshold and an unresolved policy. For a decision about gating or relying on any existing scorer, use [judge validation](../judge-validate/SKILL.md) with the saved predictions.
 
 ### Run the example
 

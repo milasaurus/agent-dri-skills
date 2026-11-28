@@ -42,6 +42,13 @@
       "prompt": "Create a judge that tells us whether the commissioner personally likes each poster. All we have are unsigned export filenames.",
       "expected_output": "Identify the missing preference evidence or human decision. Hold the verdict and avoid inferring personal taste from filenames.",
       "files": []
+    },
+    {
+      "id": 6,
+      "eval_name": "route-set-findings",
+      "prompt": "Our extractor lists all obligations in a contract. We have independent annotated lists and saved predictions. A repeated obligation may hide an omission. Build the grader.",
+      "expected_output": "Route to judge-matcher-create, reuse the frozen predictions, define material equivalence and assign one-to-one matches. Return item evidence, precision and recall. Route a release-gating question to judge-validate.",
+      "files": []
     }
   ]
 }

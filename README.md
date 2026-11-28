@@ -32,12 +32,16 @@ Use `contract-only` for the reusable rules or `task-only` for a fresh goal. When
 
 ## Judge development
 
+Use `/create-evals` to define the work, `/judge-create` to build the grader and `/judge-validate` to decide who can rely on its verdict. When errors point to a specific weakness, `/judge-tune` tests a revision. Validate the frozen revision before using it as a gate.
+
 | Skill | Reach for it when |
 | --- | --- |
 | [`/judge-create`](skills/judge-create/SKILL.md) | Describe what success means. The agent chooses and runs the relevant specialists and combines their results when a task has several requirements. |
 | [`/deterministic-judge-create`](skills/deterministic-judge-create/SKILL.md) | Records, file properties or events let you verify the requirement with code. |
 | [`/text-judge-create`](skills/text-judge-create/SKILL.md) | You need to check meaning, such as whether a reply honored a policy exception. |
 | [`/vlm-judge-create`](skills/vlm-judge-create/SKILL.md) | You need a vision-language model to grade images or video. Define the visual evidence and output contract, build a candidate, and measure how it agrees with human reviewers. |
+| [`/judge-matcher-create`](skills/judge-matcher-create/SKILL.md) | The answer is a set of findings. Build a one-to-one matcher that shows what was found, repeated or missed. |
+| [`/judge-validate`](skills/judge-validate/SKILL.md) | Decide whether a frozen judge or imported scorer is safe to gate, advisory only, or lacks enough evidence for the decision. |
 | [`/judge-tune`](skills/judge-tune/SKILL.md) | You have a judge and labeled examples. Compare one revision at a time, inspect which decisions changed, and validate the selected version before promotion. |
 
 ## Launch measurement

@@ -11,7 +11,7 @@ A reporting assistant can find every source row and still send the wrong totals 
 
 ## When to use
 
-Use this to author or extend a suite that can be run against successive versions of a capability. A PR is optional. Start from a brief, examples of work users need to finish, or a recurring failure in feedback. If the suite already exists and the decision is whether a particular change improved the agent, use [agent change evaluation](../agent-change-eval/SKILL.md). If the tasks and end states are already defined and only the grader is missing, use [judge creation](../judge-create/SKILL.md).
+Use this to author or extend a suite that can be run against successive versions of a capability. A PR is optional. Start from a brief, examples of work users need to finish, or a recurring failure in feedback. Use [agent hill-climbing](../agent-hillclimb/SKILL.md) to apply the suite to a behavior-changing PR and iterate on a fix. If the suite already exists and the decision is whether a particular change improved the agent, use [agent change evaluation](../agent-change-eval/SKILL.md). If the tasks and end states are already defined and only the grader is missing, use [judge creation](../judge-create/SKILL.md).
 
 ## Process
 

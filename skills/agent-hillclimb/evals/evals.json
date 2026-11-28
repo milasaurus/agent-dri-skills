@@ -1,0 +1,33 @@
+{
+  "skill_name": "agent-hillclimb",
+  "evals": [
+    {
+      "id": 0,
+      "eval_name": "permission-dependent-routing",
+      "prompt": "A PR lets the support agent open a review for two disputed charges. The headless runner has no access to the review tool. Give me a test plan only.",
+      "expected_output": "Identify the reachable surface and role. Specify a two-charge case, a nearby ordinary charge, expected differences and final review records. Mark the plan unrun.",
+      "files": []
+    },
+    {
+      "id": 1,
+      "eval_name": "partial-calendar-write",
+      "prompt": "Did both meetings move? The export says “both moved.” The first write committed. The second returned queued, and the export ends there.",
+      "expected_output": "Verify the first change, mark the second submission observed and its final state unverified. Identify the final calendar read needed. Avoid inferring improvement.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "eval_name": "cheaper-by-omission",
+      "prompt": "We are optimizing a reporting agent. The contract requires totals and a reconciliation appendix. Matched baseline runs passed 9/12 and 10/12. A candidate scores 11/12 on writing quality and costs 20% less, but its delivered reports omit the appendix in four cases. Keep or revert?",
+      "expected_output": "Reject the candidate for the hard regression. Distinguish the writing score from full-task completion, retain the baseline, log the failed hypothesis and leave holdout cases sealed.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "eval_name": "selected-candidate-confirmation",
+      "prompt": "Our selected retrieval change beat ordinary baseline variation on development tasks. All observed routes and grader versions match. We have untouched source-grouped cases and a persistent runner. How do we finish the climb?",
+      "expected_output": "Freeze the winner, compare matched baseline and candidate on held-out cases with fixed checks, record completed run IDs and regressions, then hand off the release decision.",
+      "files": []
+    }
+  ]
+}

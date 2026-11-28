@@ -27,6 +27,7 @@ Use `contract-only` for the reusable rules or `task-only` for a fresh goal. When
 | --- | --- |
 | [`/model-api-conformance`](skills/model-api-conformance/SKILL.md) | Does this model route satisfy the calling application's API contract? Build and run adapter-level tests for the primitives it uses. |
 | [`/create-evals`](skills/create-evals/SKILL.md) | Turn a capability or a recurring failure into a reusable suite with realistic cases, observable end states, grading rules and a pilot run. |
+| [`/agent-hillclimb`](skills/agent-hillclimb/SKILL.md) | Plan tests for a behavior-changing PR, verify what happened in a trace, or iterate on one change at a time against a baseline. |
 | [`/agent-change-eval`](skills/agent-change-eval/SKILL.md) | Does the candidate improve the outcome of an assigned task? Compare it with the baseline on matched cases and identify the evidence needed for release. |
 | [`/agent-loop-governance`](skills/agent-loop-governance/SKILL.md) | Use when designing or debugging an agent that can retry, revise, or delegate on its own. Decide what authorizes the next action and when a person or runtime must stop it. |
 

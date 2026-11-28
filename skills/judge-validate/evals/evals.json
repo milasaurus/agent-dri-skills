@@ -21,6 +21,13 @@
       "prompt": "A rules engine checks immutable export IDs. On 400 independent held-out passes and 400 independent held-out failures it matched all labels with full coverage. Replay was identical. The owner requires one-sided 95% upper error bounds under 1% for each class, full coverage and manual handling for malformed inputs. Validate this version.",
       "expected_output": "Compute per-class upper bounds around 0.75%, verify agreed scope and fallback, and recommend safe to gate for this decision. No tuning or provider calls are necessary.",
       "files": []
+    },
+    {
+      "id": 3,
+      "eval_name": "review-both-directions-before-tuning",
+      "prompt": "Should a layout judge control delivery? On 12 resize jobs, of 7 reviewer passes it passed 4, rejected 2 and timed out on 1. Of 5 reviewer fails it passed 1 and rejected 4. On a false pass it found the same headline and logo. The reviewer saw their relative prominence reverse. On a false fail it rejected a new line break. The reviewer said the reading order still worked and mentioned a spelling issue assigned to another judge. The saved rubric says to pass if the preview is too small to tell and ends with a drafting note. We can keep a person on release.",
+      "expected_output": "Give one advisory-only call with human release approval. Applying the gate to these cases would send 2/7 accepted jobs to rework and ship 1/5 rejected jobs, with 1 operational error and 8/12 agreements. Present each disagreement with its available inputs and both rationales. Identify the pass-on-small-preview policy, separate ambiguity from timeout, and ask the owner about pass, abstain or human review. Inspect the drafting note and out-of-scope spelling rationale without relabeling. Offer a fresh-development test of prominence versus element presence.",
+      "files": []
     }
   ]
 }

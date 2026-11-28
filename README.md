@@ -41,7 +41,7 @@ Use `/create-evals` to define the work, `/judge-create` to build the grader and 
 | [`/text-judge-create`](skills/text-judge-create/SKILL.md) | You need to check meaning, such as whether a reply honored a policy exception. |
 | [`/vlm-judge-create`](skills/vlm-judge-create/SKILL.md) | You need a vision-language model to grade images or video. Define the visual evidence and output contract, build a candidate, and measure how it agrees with human reviewers. |
 | [`/judge-matcher-create`](skills/judge-matcher-create/SKILL.md) | The answer is a set of findings. Build a one-to-one matcher that shows what was found, repeated or missed. |
-| [`/judge-validate`](skills/judge-validate/SKILL.md) | Decide whether a frozen judge or imported scorer is safe to gate, advisory only, or lacks enough evidence for the decision. |
+| [`/judge-validate`](skills/judge-validate/SKILL.md) | Replay a proposed gate on labeled cases. See what would ship or go to rework, inspect both kinds of disagreement, and decide where the judge can act on its own. |
 | [`/judge-tune`](skills/judge-tune/SKILL.md) | You have a judge and labeled examples. Compare one revision at a time, inspect which decisions changed, and validate the selected version before promotion. |
 
 ## Launch measurement

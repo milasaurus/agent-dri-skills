@@ -8,7 +8,7 @@ BINARY = {"pass", "fail"}
 STATUSES = BINARY | {"abstain", "error"}
 
 
-def read_rows(path, predictions=False):
+def read_rows(path, predictions=False, selected=None):
     rows = {}
     for line_no, line in enumerate(path.read_text(encoding="utf-8").splitlines(), 1):
         if not line.strip():
@@ -30,11 +30,17 @@ def read_rows(path, predictions=False):
             if not isinstance(status, str) or status not in STATUSES:
                 raise ValueError(f"{key}: unknown prediction status.")
             rows[key] = status
+            if selected is not None and key in selected:
+                selected[key] = {"verdict": status, "explanation": row.get("evidence"),
+                                 "error": row.get("error")}
         else:
             label = row.get("label")
             if label is not None and (not isinstance(label, str) or label not in BINARY | {"abstain"}):
                 raise ValueError(f"{key}: unknown reference label.")
             rows[key] = label
+            if selected is not None and key in selected:
+                selected[key] = {"input": row.get("input_ref") or row.get("input"),
+                                 "label": label, "explanation": row.get("label_explanation")}
     return rows
 
 
@@ -58,18 +64,36 @@ def main():
     parser.add_argument("roster", type=Path)
     parser.add_argument("predictions", type=Path)
     parser.add_argument("--repeat", type=Path)
+    parser.add_argument("--review-cases", nargs="+", metavar="ID",
+                        help="Include the inputs and explanations for these case IDs.")
     args = parser.parse_args()
     try:
-        roster = read_rows(args.roster)
+        reference_details = dict.fromkeys(args.review_cases or [])
+        roster = read_rows(args.roster, selected=reference_details)
+        unknown = reference_details.keys() - roster.keys()
+        if unknown:
+            raise ValueError(f"Unknown review case IDs: {sorted(unknown)}")
         if not roster:
             raise ValueError("Empty roster.")
         paths = [args.predictions] + ([args.repeat] if args.repeat else [])
-        runs = [read_rows(path, predictions=True) for path in paths]
-        for run in runs:
+        runs = []
+        reports = []
+        for path in paths:
+            predictions = dict.fromkeys(reference_details)
+            run = read_rows(path, predictions=True, selected=predictions)
+            runs.append(run)
             outside = run.keys() - roster.keys()
             if outside:
                 raise ValueError(f"Predictions outside the intended roster: {sorted(outside)}")
-        result = {"runs": [summarize(roster, run) for run in runs]}
+            report = summarize(roster, run)
+            if reference_details:
+                report["review_cases"] = [
+                    {"id": key, "input": ref["input"], "reference_label": ref["label"],
+                     "reference_explanation": ref["explanation"], "judge": predictions[key]}
+                    for key, ref in reference_details.items()
+                ]
+            reports.append(report)
+        result = {"runs": reports}
         if args.repeat:
             first, second = runs
             transitions = Counter()
